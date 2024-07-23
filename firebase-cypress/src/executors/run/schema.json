@@ -1,0 +1,20 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "Run executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "webServerCommand": {
+      "type": "string",
+      "description": "The command used to run your app."
+    },
+    "watch": {
+      "type": "boolean",
+      "description": "Whether to leave the server running and watch for changes",
+      "default": false
+    }
+  },
+  "required": [
+  ]
+}
