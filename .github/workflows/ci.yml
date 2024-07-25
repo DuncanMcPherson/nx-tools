@@ -33,12 +33,11 @@ jobs:
           cache: 'npm'
 
       - run: npm ci --legacy-peer-deps
-      - run: npm install firebase-tools
       - uses: nrwl/nx-set-shas@v4
 
       # Prepend any command with "nx-cloud record --" to record its logs to Nx Cloud
       # - run: npx nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       - run: npm install firebase-tools
-      - run: firebase use --add jduncanm-blog
+      - run: npx firebase use --add jduncanm-blog
       - run: npx nx run test-angular-e2e:e2e
