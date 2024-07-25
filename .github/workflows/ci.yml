@@ -10,6 +10,9 @@ permissions:
   actions: read
   contents: read
 
+env:
+  FIREBASE_TOKEN: {{ secrets.FIREBASE_TOKEN }}
+
 jobs:
   main:
     runs-on: ubuntu-latest
