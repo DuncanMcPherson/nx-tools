@@ -5,6 +5,7 @@ export function installedCypressVersion() {
   if (!loadedCypress) {
     try {
       cypressPackageJson = require('cypress/package.json');
+      loadedCypress = true;
     } catch {}
 
     if (!cypressPackageJson) {

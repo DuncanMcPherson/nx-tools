@@ -48,12 +48,13 @@ function startWebServer(webServerCommand: string) {
   const serverProcess = spawn(webServerCommand, {
     cwd: workspaceRoot,
     shell: true,
-    detached: process.platform !== 'win32',
+    detached: true,
     stdio: 'inherit'
   });
 
   return () => {
     if (process.platform === 'win32') {
+      serverProcess.kill();
       spawn("taskkill", ["/pid", serverProcess.pid.toString(), "/f", '/t']);
     } else {
       process.kill(-serverProcess.pid, 'SIGKILL')

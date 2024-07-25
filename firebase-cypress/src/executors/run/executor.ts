@@ -69,18 +69,18 @@ async function runCypressWithEmulators(options: RunExecutorSchema, workspaceRoot
 }
 
 function startEmulators(workingDirectory: string): () => void {
-  const serverProcess = spawn('npx firebase emulators:start', {
+  const emulatorProcess = spawn('npx firebase emulators:start', {
     cwd: workingDirectory,
     shell: true,
-    detached: process.platform !== 'win32',
+    detached: true,
     stdio: 'inherit'
   });
 
   return () => {
     if (process.platform === 'win32') {
-      spawn("taskkill", ["/pid", serverProcess.pid.toString(), "/f", '/t']);
+      spawn("taskkill", ["/pid", emulatorProcess.pid.toString(), "/f", '/t']);
     } else {
-      process.kill(-serverProcess.pid, "SIGINT");
+      process.kill(-emulatorProcess.pid, "SIGINT");
     }
   }
 }
@@ -94,7 +94,7 @@ async function waitForServer(port?: number, url?: string): Promise<void> {
 
   return new Promise((resolve, reject) => {
     let pollTimeout: NodeJS.Timeout | null;
-    const timeoutDuration = 120 * 1000;
+    const timeoutDuration = 60 * 1000;
 
     const timeout = setTimeout(() => {
       clearTimeout(pollTimeout);
