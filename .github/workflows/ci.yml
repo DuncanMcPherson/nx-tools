@@ -42,7 +42,7 @@ jobs:
       # - run: npx nx-cloud record -- echo Hello World
       # Nx Affected runs only tasks affected by the changes in this PR/commit. Learn more: https://nx.dev/ci/features/affected
       - run: npm install firebase-tools
-      - run: cd apps/test-angular
+      - run: cd /apps/test-angular
       - run: ls
       - run: npx firebase use --add jduncanm-blog
       - run: cd ../../
