@@ -21,7 +21,7 @@ jobs:
           node-version: 20
           cache: 'npm'
 
-      - run: npx nx-cloud start-ci-run --distribute-on="3 linux-medium-js" --stop-agents-after="build"
+      - run: npx nx-cloud start-ci-run --distribute-on="3 linux-small-js" --stop-agents-after="build"
       - run: npm ci --legacy-peer-deps
       - uses: nrwl/nx-set-shas@v4
         with:
