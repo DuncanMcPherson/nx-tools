@@ -18,6 +18,7 @@
     ],
     "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
   },
+  "nxCloudAccessToken": "NTMxYzNmYzAtMzVjMS00NjBlLWJiZTctNDAzMGY5NmY5NGIyfHJlYWQtd3JpdGU=",
   "targetDefaults": {
     "@nx/js:tsc": {
       "cache": true,
@@ -64,9 +65,7 @@
     },
     {
       "plugin": "@nx/eslint/plugin",
-      "options": {
-        "targetName": "eslint:lint"
-      }
+      "options": { "targetName": "eslint:lint" }
     }
   ],
   "generators": {
