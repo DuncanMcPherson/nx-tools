@@ -1,5 +1,5 @@
 {
-  "name": "@firebase-tools/firebase-cypress",
+  "name": "@nx-tools/firebase-cypress",
   "version": "0.0.1",
   "private": false,
   "description": "An unofficial NX Plugin for Firebase Applications that would like to use emulators for E2E testing with Cypress",

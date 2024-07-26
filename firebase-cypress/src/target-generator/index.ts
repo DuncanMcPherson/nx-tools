@@ -131,7 +131,7 @@ async function buildCypressTargets(
   if ('e2e' in cypressConfig) {
     const opts = buildCypressOptions(configFile, cypressConfig, projectRoot, 'e2e', false);
     targets[options.targetName] = {
-      executor: '@firebase-tools/firebase-cypress:run',
+      executor: '@nx-tools/firebase-cypress:run',
       options: opts,
       cache: true,
       inputs: getInputs(namedInputs),
@@ -197,7 +197,7 @@ async function buildCypressTargets(
           outputs,
           inputs,
           cache: true,
-          executor: 'firebase-cypress:run-ci',
+          executor: '@nx-tools/firebase-cypress:run-ci',
           options: {
             cwd: projectRoot,
             env: {
@@ -249,7 +249,7 @@ async function buildCypressTargets(
 
   if ('component' in cypressConfig) {
     targets[options.componentTestingTargetName] ??= {
-      executor: 'firebase-cypress:run-component',
+      executor: '@nx-tools/firebase-cypress:run-component',
       options: {cwd: projectRoot},
       cache: true,
       inputs: getInputs(namedInputs),
@@ -268,7 +268,7 @@ async function buildCypressTargets(
   }
 
   targets[options.openTargetName] = {
-    executor: 'firebase-cypress:open',
+    executor: '@nx-tools/firebase-cypress:open',
     options: {cwd: projectRoot},
     metadata: {
       technologies: ['cypress'],

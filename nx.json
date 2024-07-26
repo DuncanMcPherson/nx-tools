@@ -55,7 +55,7 @@
   },
   "plugins": [
     {
-      "plugin": "@firebase-tools/firebase-cypress",
+      "plugin": "@nx-tools/firebase-cypress",
       "options": {
         "targetName": "e2e",
         "openTargetName": "open-cypress",
