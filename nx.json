@@ -55,7 +55,7 @@
   },
   "plugins": [
     {
-      "plugin": "@nx-tools/firebase-cypress",
+      "plugin": "@nxextensions/firebase-cypress",
       "options": {
         "targetName": "e2e",
         "openTargetName": "open-cypress",
@@ -65,7 +65,9 @@
     },
     {
       "plugin": "@nx/eslint/plugin",
-      "options": { "targetName": "eslint:lint" }
+      "options": {
+        "targetName": "eslint:lint"
+      }
     }
   ],
   "generators": {

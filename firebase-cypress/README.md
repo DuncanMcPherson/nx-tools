@@ -1,3 +1,0 @@
-# @nx-tools/firebase-cypress
-
-

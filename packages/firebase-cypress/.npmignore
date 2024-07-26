@@ -1,0 +1,7 @@
+﻿node_modules
+**/__mocks__/*
+**/*.config.*
+project.json
+.eslintrc.json
+**/*.tgz
+**/*.spec.*
