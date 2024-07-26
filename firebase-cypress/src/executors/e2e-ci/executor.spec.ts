@@ -53,11 +53,11 @@ jest.mock('child_process', () => ({
     }
   }),
 }))
-import { RunExecutorSchema } from './schema';
+import { E2eCiExecutorSchema } from './schema';
 import executor from './executor';
 import { ExecutorContext } from "@nx/devkit";
 
-const options: RunExecutorSchema = {
+const options: E2eCiExecutorSchema = {
   cypressConfig: ""
 };
 const context: ExecutorContext = {
@@ -67,7 +67,8 @@ const context: ExecutorContext = {
   projectName: 'jets-test-e2e',
 };
 
-describe('Run Executor', () => {
+
+describe('E2eCi Executor', () => {
   it('can run', async () => {
     const output = await executor(options, context);
     expect(output.success).toBe(true);

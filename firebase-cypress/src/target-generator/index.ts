@@ -129,7 +129,7 @@ async function buildCypressTargets(
   let metadata: ProjectConfiguration['metadata'];
 
   if ('e2e' in cypressConfig) {
-    let opts = buildCypressOptions(configFile, cypressConfig, projectRoot, 'e2e', false);
+    const opts = buildCypressOptions(configFile, cypressConfig, projectRoot, 'e2e', false);
     targets[options.targetName] = {
       executor: '@firebase-tools/firebase-cypress:run',
       options: opts,

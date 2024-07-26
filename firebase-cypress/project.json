@@ -46,6 +46,14 @@
       "options": {
         "jestConfig": "firebase-cypress/jest.config.ts"
       }
+    },
+    "pack": {
+      "executor": "nx:run-commands",
+      "options": {
+        "command": "npm pack",
+        "cwd": "{projectRoot}"
+      },
+      "dependsOn": ["build"]
     }
   }
 }

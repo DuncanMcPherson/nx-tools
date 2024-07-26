@@ -5,6 +5,7 @@ export default {
   transform: {
     '^.+\\.[tj]s$': ['ts-jest', { tsconfig: '<rootDir>/tsconfig.spec.json' }],
   },
+  "transformIgnorePatterns": ["node_modules/(?!.*\\.mjs$|@nx)"],
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../coverage/firebase-cypress',
 };

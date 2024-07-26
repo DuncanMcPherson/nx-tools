@@ -1,7 +1,7 @@
 {
   "$schema": "https://json-schema.org/schema",
   "version": 2,
-  "title": "Run executor",
+  "title": "E2eCi executor",
   "description": "",
   "type": "object",
   "properties": {
@@ -11,8 +11,8 @@
     },
     "watch": {
       "type": "boolean",
-      "description": "Whether to leave the server running and watch for changes",
-      "default": false
+      "default": false,
+      "description": "Whether to leave the server running and watch for changes"
     },
     "skipServe": {
       "type": "boolean",
@@ -124,6 +124,5 @@
       "type": "string"
     }
   },
-  "required": [
-  ]
+  "required": []
 }
