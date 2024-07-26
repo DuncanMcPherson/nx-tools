@@ -24,6 +24,7 @@ export default async function runCypressInternal(options: CypressRunnerSchema, c
 async function runCypress(baseUrl: string, opts: CypressRunnerSchema): Promise<boolean> {
   const cypressVersion = installedCypressVersion();
   const projectFolderPath = dirname(opts.cypressConfig);
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   const options: any = {
     project: projectFolderPath,
     configFile: basename(opts.cypressConfig)

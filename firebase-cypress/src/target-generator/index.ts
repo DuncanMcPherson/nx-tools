@@ -309,6 +309,7 @@ function getInputs(
 
 function getOutputs(
   projectRoot: string,
+  // eslint-disable-next-line @typescript-eslint/no-explicit-any
   cypressConfig: any,
   testingType: 'e2e' | 'component'
 ): string[] {
@@ -354,7 +355,8 @@ function getOutputs(
   return outputs;
 }
 
-function buildCypressOptions(configFilePath: string, cypressConfig: any, projectRoot: string, testingType: 'e2e' | 'component', isCi: boolean): RunExecutorSchema {
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
+function buildCypressOptions(configFilePath: string, cypressConfig: any, _projectRoot: string, testingType: 'e2e' | 'component', isCi: boolean): RunExecutorSchema {
   const config = testingType in cypressConfig ? cypressConfig[testingType] : {};
   return {
     devServerTarget: isCi ? config[NX_PLUGIN_OPTIONS].ciWebServerCommand : config[NX_PLUGIN_OPTIONS].webServerCommands.default,
