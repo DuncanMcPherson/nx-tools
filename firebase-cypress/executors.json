@@ -1,9 +1,0 @@
-{
-  "executors": {
-    "run": {
-      "implementation": "./src/executors/run/executor",
-      "schema": "./src/executors/run/schema.json",
-      "description": "Run Cypress tests with a single run"
-    }
-  }
-}

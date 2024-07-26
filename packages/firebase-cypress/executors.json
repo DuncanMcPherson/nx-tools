@@ -1,0 +1,14 @@
+{
+  "executors": {
+    "run": {
+      "implementation": "./src/executors/run/executor",
+      "schema": "./src/executors/run/schema.json",
+      "description": "Run Cypress tests with a single run"
+    },
+    "run-ci": {
+      "implementation": "./src/executors/e2e-ci/executor",
+      "schema": "./src/executors/e2e-ci/schema.json",
+      "description": "e2e-ci executor"
+    }
+  }
+}

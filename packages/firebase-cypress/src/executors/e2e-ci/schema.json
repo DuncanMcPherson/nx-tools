@@ -1,0 +1,128 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "E2eCi executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "webServerCommand": {
+      "type": "string",
+      "description": "The command used to run your app."
+    },
+    "watch": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to leave the server running and watch for changes"
+    },
+    "skipServe": {
+      "type": "boolean",
+      "default": false
+    },
+    "port": {
+      "oneOf": [
+        {
+          "type": "string",
+          "enum": ["cypress-auto"]
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    "baseUrl": {
+      "type": "string"
+    },
+    "cypressConfig": {
+      "type": "string",
+      "description": "The path to your cypress config file"
+    },
+    "browser": {
+      "type": "string"
+    },
+    "env": {
+      "type": "object"
+    },
+    "spec": {
+      "type": "string"
+    },
+    "tag": {
+      "type": "string"
+    },
+    "exit": {
+      "type": "boolean"
+    },
+    "headed": {
+      "type": "boolean"
+    },
+    "record": {
+      "type": "boolean",
+      "description": "Whether to record and upload to cypress servers. When true, key must be provided"
+    },
+    "key": {
+      "type": "string"
+    },
+    "parallel": {
+      "type": "boolean"
+    },
+    "ciBuildId": {
+      "oneOf": [
+        {
+          "type": "number"
+        },
+        {
+          "type": "string"
+        }
+      ]
+    },
+    "group": {
+      "type": "string"
+    },
+    "testingType": {
+      "type": "string",
+      "enum": ["component", "e2e"]
+    },
+    "ignoreTestFiles": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ]
+    },
+    "reporter": {
+      "type": "string"
+    },
+    "reporterOptions": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "object"
+        }
+      ]
+    },
+    "quiet": {
+      "type": "boolean"
+    },
+    "autoCancelAfterFailures": {
+      "oneOf": [
+        {
+          "type": "boolean"
+        },
+        {
+          "type": "number"
+        }
+      ]
+    },
+    "ctTailwindPath": {
+      "type": "string"
+    }
+  },
+  "required": []
+}

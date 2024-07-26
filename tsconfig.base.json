@@ -15,7 +15,9 @@
     "skipDefaultLibCheck": true,
     "baseUrl": ".",
     "paths": {
-      "@firebase-tools/firebase-cypress": ["firebase-cypress/src/index.ts"]
+      "@nxextensions/firebase-cypress": [
+        "packages/firebase-cypress/src/index.ts"
+      ]
     }
   },
   "exclude": ["node_modules", "tmp"]
