@@ -15,7 +15,7 @@ In `nx.json` add:
 
 ```json
 {
-  ...
+  "...": "...",
   "plugins": [
     {
       "plugin": "@nxextensions/firebase-cypress",
