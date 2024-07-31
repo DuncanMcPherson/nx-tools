@@ -71,7 +71,7 @@ export async function startFirebaseEmulators(
 function isServerUp(port: number): Promise<boolean> {
   return new Promise((resolve) => {
     return request(
-      `http://127.0.0.1: ${port}`,
+      `http://127.0.0.1:${port}`,
       () => {
         resolve(true);
       },
@@ -83,10 +83,10 @@ function isServerUp(port: number): Promise<boolean> {
 }
 
 function startEmulators(cwd: string): () => void {
-  const emulatorProcess = spawn('npx firebase:emulators:start', {
+  const emulatorProcess = spawn('npx firebase emulators:start', {
     cwd,
     shell: true,
-    detached: true,
+    detached: process.platform !== 'win32',
     stdio: 'inherit',
   });
 

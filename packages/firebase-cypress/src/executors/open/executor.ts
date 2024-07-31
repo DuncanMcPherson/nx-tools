@@ -4,19 +4,19 @@ import { detectFirebase, startFirebaseEmulators } from '../../utils/firebase';
 import { openCypress } from '../../utils/open-cypress';
 
 const runExecutor: PromiseExecutor<OpenExecutorSchema> = async (options, context) => {
-  const { isPresent, portNumber, projectRoot } = detectFirebase(context);
+	const { isPresent, portNumber, projectRoot } = detectFirebase(context);
 
-  let killEmulators: () => void;
+	let killEmulators: () => void;
 
-  if (isPresent) {
-    killEmulators = await startFirebaseEmulators(projectRoot, portNumber);
-  }
+	if (isPresent) {
+		killEmulators = await startFirebaseEmulators(projectRoot, portNumber);
+	}
 
-  const result = await openCypress(options, context);
+	const result = await openCypress(options, context);
 
-  killEmulators && killEmulators();
+	killEmulators && killEmulators();
 
-  return result;
+	return result;
 };
 
 export default runExecutor;
