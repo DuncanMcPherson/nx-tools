@@ -7,9 +7,7 @@
 	"targets": {
 		"build": {
 			"executor": "@nx/js:tsc",
-			"outputs": [
-				"{options.outputPath}"
-			],
+			"outputs": ["{options.outputPath}"],
 			"options": {
 				"outputPath": "dist/packages/nx-firebase",
 				"main": "packages/nx-firebase/src/index.ts",
@@ -40,9 +38,7 @@
 			}
 		},
 		"nx-release-publish": {
-			"dependsOn": [
-				"^nx-release-publish"
-			],
+			"dependsOn": ["^nx-release-publish"],
 			"executor": "@nx/js:release-publish",
 			"options": {},
 			"configurations": {},
@@ -50,9 +46,7 @@
 		},
 		"test": {
 			"executor": "@nx/jest:jest",
-			"outputs": [
-				"{workspaceRoot}/coverage/{projectRoot}"
-			],
+			"outputs": ["{workspaceRoot}/coverage/{projectRoot}"],
 			"options": {
 				"jestConfig": "packages/nx-firebase/jest.config.ts",
 				"passWithNoTests": true
