@@ -89,6 +89,7 @@
 		}
 	},
 	"release": {
+		"projectsRelationship": "independent",
 		"releaseTagPattern": "{projectName}@{version}",
 		"changelog": {
 			"workspaceChangelog": false,
@@ -136,6 +137,6 @@
 			"preVersionCommand": "npx nx run-many -t build",
 			"conventionalCommits": true
 		},
-		"projects": ["packages/nx-firebase"]
+		"projects": ["packages/*"]
 	}
 }
