@@ -89,14 +89,53 @@
 		}
 	},
 	"release": {
+		"releaseTagPattern": "{projectName}@{version}",
 		"changelog": {
 			"workspaceChangelog": false,
 			"projectChangelogs": true
+		},
+		"conventionalCommits": {
+			"types": {
+				"fix": {
+					"semverBump": "patch",
+					"changelog": {
+						"title": "Bug fixes"
+					}
+				},
+				"docs": {
+					"semverBump": "none",
+					"changelog": {
+						"title": "Documentation"
+					}
+				},
+				"perf": {
+					"semverBump": "patch",
+					"changelog": {
+						"title": "Performance Enhancements"
+					}
+				},
+				"deps": {
+					"semverBump": "minor",
+					"changelog": {
+						"title": "Dependency Updates"
+					}
+				},
+				"chore": {
+					"semverBump": "none",
+					"changelog": false
+				},
+				"break": {
+					"semverBump": "major",
+					"changelog": {
+						"title": "Breaking Changes"
+					}
+				}
+			}
 		},
 		"version": {
 			"preVersionCommand": "npx nx run-many -t build",
 			"conventionalCommits": true
 		},
-		"projects": ["packages/*"]
+		"projects": ["packages/nx-firebase"]
 	}
 }
