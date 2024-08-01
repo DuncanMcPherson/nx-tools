@@ -93,9 +93,7 @@ async function runCypress(
 
   options.testingType = opts.testingType;
 
-  const result = await (opts.watch
-    ? Cypress.open(options)
-    : Cypress.run(options));
+  const result = await Cypress.run(options);
 
   cleanupTmpFile(opts.ctTailwindPath);
   cleanupTmpFile(opts.portLockFilePath);

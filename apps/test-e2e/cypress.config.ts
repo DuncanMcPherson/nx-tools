@@ -11,6 +11,7 @@ export default defineConfig({
 				production: 'nx run test:serve:production',
 			},
 			ciWebServerCommand: 'nx run test:serve-static',
+			emulatorCommand: 'nx run test:firebase-emulators'
 		}),
 		baseUrl: 'http://localhost:4200',
 	},

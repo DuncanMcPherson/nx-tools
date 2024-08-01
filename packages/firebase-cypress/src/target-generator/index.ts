@@ -30,7 +30,6 @@ export interface PluginOptions {
 	targetName?: string;
 	openTargetName?: string;
 	componentTestingTargetName?: string;
-	emulatorTargetName?: string;
 }
 
 type PluginTargets = Pick<ProjectConfiguration, 'targets' | 'metadata'>;
@@ -132,9 +131,6 @@ async function buildCypressTargets(
 		...cypressConfig.e2e?.env
 	};
 
-	const dependencyProjectName = getProjectFromCommand(cypressConfig.e2e[NX_PLUGIN_OPTIONS].webServerCommands.default);
-	const dependencyTarget = dependencyProjectName.length ? `${dependencyProjectName}:${options.emulatorTargetName}` : undefined;
-
 	const webServerCommands: Record<string, string> =
 		pluginPresetOptions.webServerCommands;
 	const namedInputs = getNamedInputs(projectRoot, context);
@@ -157,7 +153,6 @@ async function buildCypressTargets(
 			inputs: getInputs(namedInputs),
 			outputs: getOutputs(projectRoot, cypressConfig, 'e2e'),
 			parallelism: false,
-			dependsOn: dependencyTarget ? [dependencyTarget] : undefined,
 			metadata: {
 				technologies: ['cypress'],
 				description: 'Runs Cypress Tests',
@@ -249,7 +244,6 @@ async function buildCypressTargets(
 					projects: 'self',
 					params: 'forward'
 				});
-				dependencyTarget && dependsOn.push(dependencyTarget);
 			}
 
 			targets[options.ciTargetName] = {
@@ -298,7 +292,6 @@ async function buildCypressTargets(
 	targets[options.openTargetName] = {
 		executor: '@nxextensions/firebase-cypress:open',
 		options: { cwd: projectRoot },
-		dependsOn: dependencyTarget ? [dependencyTarget] : undefined,
 		metadata: {
 			technologies: ['cypress'],
 			description: 'Opens Cypress',
@@ -320,7 +313,6 @@ function normalizeOptions(options: PluginOptions): PluginOptions {
 	options.componentTestingTargetName ??= 'component';
 	options.openTargetName ??= 'open-cypress';
 	options.targetName ??= 'e2e';
-	options.emulatorTargetName ??= 'firebase-emulators';
 	return options;
 }
 
@@ -391,7 +383,7 @@ function buildCypressOptions(
 	cypressConfig: any,
 	_projectRoot: string,
 	testingType: 'e2e' | 'component',
-	isCi: boolean
+	isCi: boolean,
 ): RunExecutorSchema {
 	const config = testingType in cypressConfig ? cypressConfig[testingType] : {};
 	return {
@@ -400,17 +392,7 @@ function buildCypressOptions(
 			: config[NX_PLUGIN_OPTIONS].webServerCommands.default,
 		baseUrl: config.baseUrl,
 		cypressConfig: configFilePath,
-		testingType
+		testingType,
+		emulatorCommand: config[NX_PLUGIN_OPTIONS].emulatorCommand,
 	};
-}
-
-function getProjectFromCommand(webServerCommand: string) {
-	const commandTargets = webServerCommand.split(' ');
-	const commandTarget = commandTargets[commandTargets.length - 1];
-	if (!commandTarget) {
-		return '';
-	}
-
-	const [project] = commandTarget.split(':');
-	return project;
 }

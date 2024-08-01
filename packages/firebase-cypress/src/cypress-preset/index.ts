@@ -65,7 +65,8 @@ export function nxE2EPreset(
 		[NX_PLUGIN_OPTIONS]: {
 			webServerCommand: options?.webServerCommands?.default,
 			webServerCommands: options?.webServerCommands,
-			ciWebServerCommand: options?.ciWebServerCommand
+			ciWebServerCommand: options?.ciWebServerCommand,
+			emulatorCommand: options?.emulatorCommand
 		},
 
 		async setupNodeEvents(on, config) {
@@ -90,4 +91,5 @@ export type NxCypressE2EPresetOptions = {
 	ciWebServerCommand?: string;
 	webServerConfig?: WebServerConfig;
 	viteConfigOverrides?: InlineConfig;
+	emulatorCommand?: string;
 };
