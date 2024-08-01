@@ -86,8 +86,8 @@ function startEmulators(cwd: string): () => void {
   const emulatorProcess = spawn('npx firebase emulators:start', {
     cwd,
     shell: true,
-    detached: process.platform !== 'win32',
-    stdio: 'inherit',
+    detached: true,
+    stdio: process.platform === 'win32' ? 'ignore' : 'inherit',
   });
 
   return () => {

@@ -17,7 +17,8 @@
 		"paths": {
 			"@nxextensions/firebase-cypress": [
 				"packages/firebase-cypress/src/index.ts"
-			]
+			],
+			"@nxextensions/nx-firebase": ["packages/nx-firebase/src/index.ts"]
 		}
 	},
 	"exclude": ["node_modules", "tmp"]

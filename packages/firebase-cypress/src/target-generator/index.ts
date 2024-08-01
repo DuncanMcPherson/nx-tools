@@ -1,16 +1,16 @@
 ﻿import {
-  CreateNodesContext,
-  createNodesFromFiles,
-  CreateNodesV2,
-  detectPackageManager,
-  getPackageManagerCommand,
-  joinPathFragments,
-  normalizePath,
-  NxJsonConfiguration,
-  ProjectConfiguration,
-  readJsonFile,
-  TargetConfiguration,
-  writeJsonFile,
+	CreateNodesContext,
+	createNodesFromFiles, CreateNodesResult,
+	CreateNodesV2,
+	detectPackageManager,
+	getPackageManagerCommand,
+	joinPathFragments,
+	normalizePath,
+	NxJsonConfiguration,
+	ProjectConfiguration,
+	readJsonFile,
+	TargetConfiguration,
+	writeJsonFile
 } from '@nx/devkit';
 import { existsSync, readdirSync } from 'fs';
 import { hashObject } from 'nx/src/devkit-internals';
@@ -73,7 +73,7 @@ async function createNodesInternal(
   options: object,
   context: CreateNodesContext,
   targetsCache: Record<string, PluginTargets>
-) {
+): Promise<CreateNodesResult> {
   options = normalizeOptions(options);
   const projectRoot = dirname(configFile);
 
@@ -312,7 +312,7 @@ function normalizeOptions(options: PluginOptions): PluginOptions {
   options.ciTargetName ??= 'e2e-ci';
   options.componentTestingTargetName ??= 'component';
   options.openTargetName ??= 'open-cypress';
-  options.targetName ??= 'target';
+  options.targetName ??= 'e2e';
   return options;
 }
 
@@ -377,9 +377,9 @@ function getOutputs(
   return outputs;
 }
 
-// eslint-disable-next-line @typescript-eslint/no-explicit-any
 function buildCypressOptions(
   configFilePath: string,
+// eslint-disable-next-line @typescript-eslint/no-explicit-any
   cypressConfig: any,
   _projectRoot: string,
   testingType: 'e2e' | 'component',

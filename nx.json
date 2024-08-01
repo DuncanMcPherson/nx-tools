@@ -72,6 +72,12 @@
 				"componentTestingTargetName": "component-test",
 				"ciTargetName": "e2e-ci"
 			}
+		},
+		{
+			"plugin": "@nxextensions/nx-firebase",
+			"options": {
+				"firebaseEmulatorsTargetName": "firebase-emulators"
+			}
 		}
 	],
 	"generators": {
