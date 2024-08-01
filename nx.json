@@ -89,10 +89,14 @@
 		}
 	},
 	"release": {
+		"changelog": {
+			"workspaceChangelog": false,
+			"projectChangelogs": true
+		},
 		"version": {
 			"preVersionCommand": "npx nx run-many -t build",
 			"conventionalCommits": true
 		},
-		"projects": ["packages/firebase-cypress"]
+		"projects": ["packages/*"]
 	}
 }
