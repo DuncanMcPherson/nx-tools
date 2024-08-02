@@ -1,1 +1,3 @@
-export interface EmulatorsExecutorSchema {} // eslint-disable-line
+export interface EmulatorsExecutorSchema {
+	cwd: string;
+} // eslint-disable-line

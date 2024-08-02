@@ -4,6 +4,11 @@
 	"title": "Emulators executor",
 	"description": "",
 	"type": "object",
-	"properties": {},
+	"properties": {
+		"cwd": {
+			"type": "string",
+			"description": "The directory from which the emulators should be started. This should be the same directory as your firebase.json"
+		}
+	},
 	"required": []
 }

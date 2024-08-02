@@ -5,9 +5,6 @@
 	CreateNodesV2,
 	detectPackageManager,
 	getPackageManagerCommand,
-	joinPathFragments,
-	normalizePath,
-	NxJsonConfiguration,
 	ProjectConfiguration,
 	readJsonFile,
 	TargetConfiguration,
@@ -15,13 +12,11 @@
 } from '@nx/devkit';
 import { existsSync, readdirSync } from 'fs';
 import { hashObject } from 'nx/src/devkit-internals';
-import { join, dirname, relative } from 'path';
+import { join, dirname } from 'path';
 import { workspaceDataDirectory } from 'nx/src/utils/cache-directory';
 import { calculateHashForCreateNodes } from '@nx/devkit/src/utils/calculate-hash-for-create-nodes';
 import { getLockFileName } from '@nx/js';
 import { loadConfigFile } from '@nx/devkit/src/utils/config-utils';
-import { getNamedInputs } from '@nx/devkit/src/utils/get-named-inputs';
-import { globWithWorkspaceContext } from 'nx/src/utils/workspace-context';
 
 export interface PluginOptions {
 	firebaseEmulatorsTargetName?: string;
