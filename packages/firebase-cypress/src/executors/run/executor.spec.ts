@@ -43,7 +43,6 @@ jest.mock('cypress', () => ({
   }),
   open: jest.fn(() => ({})),
 }));
-jest.mock('../../utils/request');
 jest.mock('../../utils/cypress-version');
 jest.mock('child_process', () => ({
   spawn: jest.fn(() => {
