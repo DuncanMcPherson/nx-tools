@@ -13,10 +13,13 @@
 		"@nx/angular": "^19.5.4",
 		"@nx/devkit": "19.5.3",
 		"@nx/plugin": "19.5.3",
+		"chalk": "^4.1.0",
 		"detect-port": "^1.6.1",
 		"firebase": "^10.12.4",
+		"npm-run-path": "^4.0.1",
 		"rxjs": "~7.8.0",
 		"tslib": "^2.3.0",
+		"yargs-parser": "^21.1.1",
 		"zone.js": "~0.14.3"
 	},
 	"devDependencies": {

@@ -59,16 +59,18 @@ export async function *startFirebaseEmulators(
 	const target = targetStringToTarget(command);
 
 	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	for await (const _s of await runExecutor(target, {}, context)) {
+	for await (const _s of await runExecutor<{success: boolean, killProcess: () => void}>(target, {}, context)) {
+		if (!_s.success) {
+			_s.killProcess();
+			yield { success: false };
+			break;
+		}
 		for await (const res of startDevServer(options.webServerCommand ?? options.devServerTarget, options.watch, options, context)) {
 			yield res;
-
-			if (!watch) {
-				break;
-			}
 		}
 
 		if (!watch) {
+			_s.killProcess();
 			break;
 		}
 	}

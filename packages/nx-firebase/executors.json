@@ -1,9 +1,9 @@
 {
 	"executors": {
-		"emulators": {
-			"implementation": "./src/executors/emulators/executor",
-			"schema": "./src/executors/emulators/schema.json",
-			"description": "emulators executor"
+		"killable-run": {
+			"implementation": "./src/executors/killable-run/executor",
+			"schema": "./src/executors/killable-run/schema.json",
+			"description": "killable-run executor"
 		}
 	}
 }

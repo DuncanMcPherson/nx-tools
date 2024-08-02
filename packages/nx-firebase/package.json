@@ -5,7 +5,10 @@
 		"@nx/devkit": "^19.5.3",
 		"tslib": "^2.3.0",
 		"nx": "^19.5.3",
-		"@nx/js": "^19.5.3"
+		"@nx/js": "^19.5.3",
+		"yargs-parser": "^21.1.1",
+		"npm-run-path": "^4.0.1",
+		"chalk": "^4.1.0"
 	},
 	"type": "commonjs",
 	"main": "./src/index.js",

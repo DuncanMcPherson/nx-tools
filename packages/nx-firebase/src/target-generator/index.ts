@@ -122,10 +122,13 @@ async function buildFirebaseTargets(
 	const targets: Record<string, TargetConfiguration> = {};
 
 	targets[options.firebaseEmulatorsTargetName] = {
-		executor: "@nxextensions/nx-firebase:emulators",
+		executor: "@nxextensions/nx-firebase:killable-run",
 		parallelism: true,
 		options: {
+			command: 'npx firebase emulators:start',
 			cwd: projectRoot,
+			readyWhen: "safe to connect",
+			parallel: true
 		},
 		metadata: {
 			technologies: ['firebase'],
