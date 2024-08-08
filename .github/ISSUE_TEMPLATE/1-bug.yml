@@ -12,8 +12,9 @@ body:
 - type: dropdown
   id: plugin-name
   attributes:
-    label: "Test issue"
-    description: "This is just a test"
+    label: "Plugin name"
+    description: "Which plugin(s) are experiencing the issue?"
+    multiple: true
     options:
     - "Firebase Cypress"
     - "NX Firebase"
