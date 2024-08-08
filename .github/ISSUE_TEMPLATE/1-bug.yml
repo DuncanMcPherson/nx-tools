@@ -9,7 +9,11 @@ body:
       Thank you for your patience with these plugins and for your time submitting a bug report.
 
       Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
-- type: textarea
+- type: dropdown
+  id: plugin-name
   attributes:
     label: "Test issue"
     description: "This is just a test"
+    options:
+    - "Firebase Cypress"
+    - "NX Firebase"
