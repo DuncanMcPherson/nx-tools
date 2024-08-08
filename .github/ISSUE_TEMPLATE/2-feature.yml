@@ -7,6 +7,8 @@ body:
   attributes:
     label: "What is the problem you are trying to solve?"
     description: "Please provide a clear and concise description of what you are trying to accomplish"
+  validations:
+    required: true
 #﻿name: "Feature request"
 #description: "This form is to request a new feature or plugin"
 #body:
