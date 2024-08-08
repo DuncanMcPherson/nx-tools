@@ -1,7 +1,5 @@
 ﻿name: "Feature request"
 description: "This form is to request a new feature or plugin"
-labels:
-    - bug
 body:
 - type: textarea
   id: problem
