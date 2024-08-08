@@ -1,11 +1,10 @@
-# nx-firebase
+[![NPM License](https://img.shields.io/npm/l/%40nxextensions%2fnx-firebase)]()
+[![NPM Version](https://img.shields.io/npm/v/%40nxextensions%2fnx-firebase)]()
 
-This library was generated with [Nx](https://nx.dev).
+# NX Firebase
 
-## Building
+A plugin that auto-detects Firebase in your project and adds targets to start the emulators
 
-Run `nx build nx-firebase` to build the library.
+## Installation
 
-## Running unit tests
-
-Run `nx test nx-firebase` to execute the unit tests via [Jest](https://jestjs.io).
+`npm i @nxextensions/nx-firebase --save-dev`
