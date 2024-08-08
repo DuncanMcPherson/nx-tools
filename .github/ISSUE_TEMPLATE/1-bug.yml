@@ -1,63 +1,65 @@
-﻿name: Bug Report
-about: This form is to report unexpected behavior in the plugins
-labels: [ "type: bug" ]
+name: "Bug Report"
+description: "This form is to report unexpected behavior in the plugin"
+labels:
+- bug
 body:
-  - type: markdown
-    attributes:
-      value: |
-        Thank you for your patience with these plugins and for your time submitting a bug report.
+- type: markdown
+  attributes:
+    value: |
+      Thank you for your patience with these plugins and for your time submitting a bug report.
 
-        Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
-  - type: dropdown
-    id: plugin-name
-    attributes:
-      label: Plugin name
-      description: Which plugin is experiencing the issue?
-      options:
-        - Firebase Cypress (@nxextensions/firebase-cypress)
-        - NX Firebase (@nxextensions/nx-firebase)
-    validations:
-        required: true
-  - type: textarea
-    id: current-behavior
-    attributes:
-      label: Current Behavior
-      description: What is currently happening?
-    validations:
-      required: true
-  - type: textarea
-    id: expected-behavior
-    attributes:
-        label: Expected behavior
-        description: What would you expect to happen?
-    validations:
-        required: true
-  - type: textarea
-    id: repro-steps
-    attributes:
-        label: Steps to reproduce
-        description: Please provide the actions you took to experience the unexpected behavior
-        value: |
-            1.
-    validations:
-        required: true
-  - type: input
-    id: repo
-    attributes:
-        label: GitHub Repo
-        description: |
-            This is extremely important! Please provide a repo where the error is reproduce-able
-            This is the best way to make sure that we can reproduce your issue and find a fix for it.
-  - type: textarea
-    id: logs
-    attributes:
-        label: Error logs
-        description: Please paste the logs of what you are experiencing here. This will be automatically formatted into code.
-        render: shell
-    validations:
-        required: true
-  - type: textarea
-    id: additional
-    attributes:
-        label: Additional information
-        description: Is there any extra information that you can provide to help reproduce the issue?
+      Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
+- type: dropdown
+  id: plugin-name
+  attributes:
+    label: "Plugin name"
+    description: "Which plugin(s) are experiencing the issue?"
+    multiple: true
+    options:
+    - "Firebase Cypress"
+    - "NX Firebase"
+  validations:
+    required: true
+- type: textarea
+  id: current
+  attributes:
+    label: "Current Behavior"
+    description: "What is currently happening?"
+  validations: 
+    required: true
+- type: textarea
+  id: expected
+  attributes:
+    label: "Expected behavior"
+    description: "What would you expect to happen?"
+  validations:
+    required: true
+- type: textarea
+  id: repro
+  attributes:
+    label: "Steps to reproduce"
+    description: "Please provide the actions you took to experience the unexpected behavior"
+    value: |
+      1.
+  validations:
+    required: true
+- type: input
+  id: repo
+  attributes:
+    label: GitHub Repo
+    description: |
+      This is extremely important! Please provide a repo where the error is reproduce-able
+      This is the best way to make sure that we can reproduce your issue and find a fix for it.
+- type: textarea
+  id: logs
+  attributes:
+    label: "Error logs"
+    description: "Please paste the logs of what you are experiencing here. This will be automatically formatted into code."
+    render: shell
+  validations:
+    required: true
+- type: textarea
+  id: additional
+  attributes:
+    label: "Additional information"
+    description: "Is there any extra information that you can provide to help reproduce the issue?"
