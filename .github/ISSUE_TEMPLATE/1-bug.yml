@@ -1,19 +1,20 @@
-﻿name: "Bug Report"
-description: "This form is to report unexpected behavior in the plugins
-body:
+
 #- type: markdown
 #  attributes:
 #    value: |
 #      Thank you for your patience with these plugins and for your time submitting a bug report.
 #      Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
+name: "Bug Report"
+description: "This form is to report unexpected behavior in the plugins
+body:
   - type: dropdown
     id: plugin-name
     attributes:
-      label: Plugin name
-      description: Which plugin is experiencing the issue?
+      label: "Plugin name"
+      description: "Which plugin is experiencing the issue?"
       multiple: true
       options:
-        - Firebase Cypress (@nxextensions/firebase-cypress)
-        - NX Firebase (@nxextensions/nx-firebase)
+        - "Firebase Cypress (@nxextensions/firebase-cypress)"
+        - "NX Firebase (@nxextensions/nx-firebase)"
     validations:
       required: true
