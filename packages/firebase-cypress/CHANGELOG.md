@@ -1,3 +1,23 @@
+## 4.1.0 (2024-08-08)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** finished executors including behavior
+
+
+### Bug fixes
+
+- **firebase-cypress:** minor adjustments to how the executors work
+
+- **firebase-cypress:** formatting and ensure that base web server gets shut down
+
+
+### ❤️  Thank You
+
+- Duncan
+- Duncan McPherson
+
 # 4.0.0 (2024-08-01)
 
 
