@@ -119,16 +119,19 @@ async function buildFirebaseTargets(
 		return {};
 	}
 
+	const emulatorsToStart = getEmulatorsNames(firebaseConfig.emulators);
+
 	const targets: Record<string, TargetConfiguration> = {};
 
 	targets[options.firebaseEmulatorsTargetName] = {
-		executor: "@nxextensions/nx-firebase:killable-run",
+		executor: "@nxextensions/nx-firebase:firebase",
 		parallelism: true,
 		options: {
 			command: 'npx firebase emulators:start',
 			cwd: projectRoot,
-			readyWhen: "safe to connect",
-			parallel: true
+			readyWhen: "It is now safe to connect",
+			parallel: true,
+			only: emulatorsToStart
 		},
 		metadata: {
 			technologies: ['firebase'],
@@ -149,4 +152,16 @@ function normalizeOptions(options: PluginOptions): PluginOptions {
 	options ??= {};
 	options.firebaseEmulatorsTargetName ??= "firebase-emulators";
 	return options;
+}
+
+function getEmulatorsNames(emulatorsObject: {[key: string]: { port: number}}): string[] {
+	const res: string[] = [];
+
+	Object.keys(emulatorsObject).forEach((key: string) => {
+		if (!res.includes(key) && !!emulatorsObject[key].port) {
+			res.push(key);
+		}
+	});
+
+	return res;
 }
