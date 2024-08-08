@@ -1,4 +1,4 @@
-name: "Bug Report"
+name: Bug Report
 description: "This form is to report unexpected behavior in the plugins
 body:
   - type: dropdown
