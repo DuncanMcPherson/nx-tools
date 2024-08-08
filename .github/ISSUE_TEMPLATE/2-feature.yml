@@ -16,8 +16,8 @@ body:
     description: "Please provide what you would like to have happen. The more detail provided, the better."
   validations:
     required: true
-#- type: textarea
-#  id: context
-#  attributes:
-#    label: "Additional context"
-#    description: "Add any other context that you can to help provide a scope to your request"
+- type: textarea
+  id: context
+  attributes:
+    label: "Additional context"
+    description: "Add any other context that you can to help provide a scope to your request"
