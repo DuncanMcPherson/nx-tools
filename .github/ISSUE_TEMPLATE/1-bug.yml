@@ -27,3 +27,39 @@ body:
     description: "What is currently happening?"
   validations: 
     required: true
+- type: textarea
+  id: expected
+  attributes:
+    label: "Expected behavior"
+    description: "What would you expect to happen?"
+  validations:
+    required: true
+- type: textarea
+  id: repro
+  attributes:
+    label: "Steps to reproduce"
+    description: "Please provide the actions you took to experience the unexpected behavior"
+    value: |
+      1.
+  validations:
+    required: true
+- type: input
+  id: repo
+  attributes:
+    label: GitHub Repo
+    description: |
+      This is extremely important! Please provide a repo where the error is reproduce-able
+      This is the best way to make sure that we can reproduce your issue and find a fix for it.
+- type: textarea
+  id: logs
+  attributes:
+    label: "Error logs"
+    description: "Please paste the logs of what you are experiencing here. This will be automatically formatted into code."
+    render: shell
+  validations:
+    required: true
+- type: textarea
+  id: additional
+  attributes:
+    label: "Additional information"
+    description: "Is there any extra information that you can provide to help reproduce the issue?"
