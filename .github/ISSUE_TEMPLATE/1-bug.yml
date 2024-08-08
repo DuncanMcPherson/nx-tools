@@ -1,9 +1,3 @@
-
-#- type: markdown
-#  attributes:
-#    value: |
-#      Thank you for your patience with these plugins and for your time submitting a bug report.
-#      Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
 name: "Bug Report"
 description: "This form is to report unexpected behavior in the plugins
 body:
