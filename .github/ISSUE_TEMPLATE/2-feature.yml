@@ -1,4 +1,5 @@
 name: "Feature request"
+description: "This form is to request a new feature or plugin"
 body:
 - type: textarea
   attributes:
