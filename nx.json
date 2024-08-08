@@ -115,12 +115,6 @@
 						"title": "Performance Enhancements"
 					}
 				},
-				"deps": {
-					"semverBump": "minor",
-					"changelog": {
-						"title": "Dependency Updates"
-					}
-				},
 				"chore": {
 					"semverBump": "none",
 					"changelog": false
