@@ -20,3 +20,10 @@ body:
     - "NX Firebase"
   validations:
     required: true
+- type: textarea
+  id: current
+  attributes:
+    label: "Current Behavior"
+    description: "What is currently happening?"
+  validations: 
+    required: true
