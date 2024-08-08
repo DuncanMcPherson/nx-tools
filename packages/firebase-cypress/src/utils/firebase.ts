@@ -1,77 +1,111 @@
 ﻿import {
 	ExecutorContext,
+	ProjectConfiguration,
+	readJsonFile,
 	readProjectsConfigurationFromProjectGraph,
-	readJsonFile, runExecutor
+	runExecutor
 } from '@nx/devkit';
 import { readdirSync } from 'fs';
 import { join } from 'path';
 import { targetStringToTarget } from './target-string-to-target';
 import { CypressRunnerSchema } from './cypress-runner.schema';
-import startDevServer from './dev-server';
+import * as killPort from 'kill-port';
+import runCypressInternal from './run-cypress';
 
 export function detectFirebase(context: ExecutorContext): {
-  isPresent: boolean;
+	isPresent: boolean;
 } {
-  const projectName = context.projectName;
-  const projects = readProjectsConfigurationFromProjectGraph(
-    context.projectGraph
-  );
-  const dependencyName = projects.projects[projectName].implicitDependencies[0];
-  const dependency = projects.projects[dependencyName];
-  const siblingFiles = readdirSync(join(context.root, dependency.root));
-  if (!siblingFiles.includes('firebase.json')) {
-    return { isPresent: false };
-  }
+	const dependency = getE2EProjectDependency(context);
+	const siblingFiles = readdirSync(join(context.root, dependency.root));
+	if (!siblingFiles.includes('firebase.json')) {
+		return { isPresent: false };
+	}
 
-  const { hasEmulators } = getPortForFirebaseEmulator(
-    join(context.root, dependency.root, 'firebase.json')
-  );
+	const { hasEmulators } = getPortForFirebaseEmulator(
+		join(context.root, dependency.root, 'firebase.json')
+	);
 
-  return hasEmulators
-    ? { isPresent: true }
-    : { isPresent: false };
+	return hasEmulators
+		? { isPresent: true }
+		: { isPresent: false };
 }
 
 function getPortForFirebaseEmulator(firebaseJsonPath: string): {
-  hasEmulators: boolean;
+	hasEmulators: boolean;
 } {
-  const firebaseConfig = readJsonFile(firebaseJsonPath);
-  if (!firebaseConfig?.emulators) {
-    return { hasEmulators: false };
-  }
-  let port: number;
-  Object.keys(firebaseConfig.emulators).forEach((key) => {
-    if (!port) {
-      port = firebaseConfig.emulators[key]?.port;
-    }
-  });
+	const firebaseConfig = readJsonFile(firebaseJsonPath);
+	if (!firebaseConfig?.emulators) {
+		return { hasEmulators: false };
+	}
+	let port: number;
+	Object.keys(firebaseConfig.emulators).forEach((key) => {
+		if (!port) {
+			port = firebaseConfig.emulators[key]?.port;
+		}
+	});
 
-  if (!port) {
-    return { hasEmulators: false };
-  }
+	if (!port) {
+		return { hasEmulators: false };
+	}
 
-  return { hasEmulators: true };
+	return { hasEmulators: true };
 }
 
-export async function *startFirebaseEmulators(
-  watch: boolean, command: string, options: CypressRunnerSchema, context: ExecutorContext
+export async function* startFirebaseEmulators(
+	watch: boolean, command: string, options: CypressRunnerSchema, context: ExecutorContext
 ): AsyncGenerator<{ success: boolean }> {
 	const target = targetStringToTarget(command);
 
-	// eslint-disable-next-line @typescript-eslint/no-unused-vars
-	for await (const _s of await runExecutor<{success: boolean, killProcess: () => void}>(target, {}, context)) {
+	for await (const _s of await runExecutor(target, {}, context)) {
 		if (!_s.success) {
-			_s.killProcess();
 			yield { success: false };
 			break;
 		}
-		for await (const res of startDevServer(options.webServerCommand ?? options.devServerTarget, options.watch, options, context)) {
-			yield res;
-		}
+
+		const result = await runCypressInternal(options, context);
+		yield result;
 
 		if (!watch) {
-			_s.killProcess();
 			break;
 		}
 	}
+}
+
+export async function terminateEmulatorsIfStarted(context: ExecutorContext): Promise<void> {
+	const dependency = getE2EProjectDependency(context);
+	const portsArray = getPortsForEmulators(join(context.root, dependency.root, 'firebase.json'));
+
+	try {
+		for (const port of portsArray) {
+			await killPort(port);
+		}
+	} catch (e) {
+		console.error(e);
+	}
+}
+
+function getE2EProjectDependency(context: ExecutorContext): ProjectConfiguration {
+	const projectName = context.projectName;
+	const projects = readProjectsConfigurationFromProjectGraph(
+		context.projectGraph
+	);
+	const dependencyName = projects.projects[projectName].implicitDependencies[0];
+	return projects.projects[dependencyName];
+}
+
+function getPortsForEmulators(firebaseJsonPath: string): string[] {
+	const firebaseConfig = readJsonFile(firebaseJsonPath);
+	if (!firebaseConfig?.emulators) {
+		return [];
+	}
+
+	const res: string[] = [];
+
+	Object.keys(firebaseConfig.emulators).forEach((key) => {
+		if (!!firebaseConfig.emulators[key].port &&!res.includes(firebaseConfig.emulators[key].port)) {
+			res.push(firebaseConfig.emulators[key].port);
+		}
+	});
+
+	return res;
 }

@@ -21,7 +21,7 @@ import { getLockFileName } from '@nx/js';
 import { loadConfigFile } from '@nx/devkit/src/utils/config-utils';
 import { getNamedInputs } from '@nx/devkit/src/utils/get-named-inputs';
 import { globWithWorkspaceContext } from 'nx/src/utils/workspace-context';
-import { RunExecutorSchema } from '../executors/run/schema';
+import { CypressRunnerSchema } from '../utils/cypress-runner.schema';
 
 export const NX_PLUGIN_OPTIONS = '__NX_PLUGIN_OPTIONS__';
 
@@ -48,7 +48,7 @@ const pmc = getPackageManagerCommand();
 export const createNodesV2: CreateNodesV2<PluginOptions> = [
 	cypressConfigGlob,
 	async (configFiles, options, context) => {
-		const optionsHash = hashObject(options);
+		const optionsHash = hashObject(options!);
 		const cachePath = join(
 			workspaceDataDirectory,
 			`cypress-${optionsHash}.hash`
@@ -57,7 +57,7 @@ export const createNodesV2: CreateNodesV2<PluginOptions> = [
 		try {
 			return await createNodesFromFiles(
 				(configFile, options, context) =>
-					createNodesInternal(configFile, options, context, targetsCache),
+					createNodesInternal(configFile, options!, context, targetsCache),
 				configFiles,
 				options,
 				context
@@ -146,7 +146,7 @@ async function buildCypressTargets(
 			'e2e',
 			false
 		);
-		targets[options.targetName] = {
+		targets[options.targetName!] = {
 			executor: '@nxextensions/firebase-cypress:run',
 			options: opts,
 			cache: true,
@@ -165,20 +165,18 @@ async function buildCypressTargets(
 			}
 		};
 
-		if (webServerCommands?.default) {
-			delete webServerCommands.default;
-		}
-
 		if (Object.keys(webServerCommands ?? {}).length > 0) {
-			targets[options.targetName].configurations ??= {};
+			targets[options.targetName!].configurations ??= {};
 			for (const [configuration, webServerCommand] of Object.entries(
 				webServerCommands ?? {}
 			)) {
-				targets[options.targetName].configurations[configuration] = {
-					env: {
-						webServerCommand
-					}
-				};
+				if (configuration !== 'default') {
+					targets[options.targetName!].configurations![configuration] = {
+						env: {
+							webServerCommand
+						}
+					};
+				}
 			}
 		}
 
@@ -209,10 +207,11 @@ async function buildCypressTargets(
 
 			const groupName = 'E2E (CI)';
 			metadata = { targetGroups: { [groupName]: [] } };
-			const ciTargetGroup = metadata.targetGroups[groupName];
+			const ciTargetGroup = metadata.targetGroups![groupName];
 			for (const file of specFiles) {
 				const relativeSpecPath = normalizePath(relative(projectRoot, file));
 				const targetName = `${options.ciTargetName}--${relativeSpecPath}`;
+				const opt = buildCypressOptions(configFile, cypressConfig, projectRoot, 'e2e', true);
 
 				ciTargetGroup.push(targetName);
 				targets[targetName] = {
@@ -221,6 +220,7 @@ async function buildCypressTargets(
 					cache: true,
 					executor: '@nxextensions/firebase-cypress:run-ci',
 					options: {
+						...opt,
 						cwd: projectRoot,
 						env: {
 							webServerCommand: ciWebServerCommand,
@@ -246,12 +246,21 @@ async function buildCypressTargets(
 				});
 			}
 
-			targets[options.ciTargetName] = {
+			const opt = buildCypressOptions(
+				configFile,
+				cypressConfig,
+				projectRoot,
+				'e2e',
+				true
+			);
+
+			targets[options.ciTargetName!] = {
 				executor: 'nx:noop',
 				cache: true,
 				inputs,
 				outputs,
 				dependsOn,
+				options: opt,
 				parallelism: false,
 				metadata: {
 					technologies: ['cypress'],
@@ -265,14 +274,16 @@ async function buildCypressTargets(
 					}
 				}
 			};
-			ciTargetGroup.push(options.ciTargetName);
+			ciTargetGroup.push(options.ciTargetName!);
 		}
 	}
 
 	if ('component' in cypressConfig) {
-		targets[options.componentTestingTargetName] ??= {
+		targets[options.componentTestingTargetName!] ??= {
 			executor: '@nxextensions/firebase-cypress:run-component',
-			options: { cwd: projectRoot },
+			options: {
+				cwd: projectRoot
+			},
 			cache: true,
 			inputs: getInputs(namedInputs),
 			outputs: getOutputs(projectRoot, cypressConfig, 'component'),
@@ -289,9 +300,19 @@ async function buildCypressTargets(
 		};
 	}
 
-	targets[options.openTargetName] = {
+
+	targets[options.openTargetName!] = {
 		executor: '@nxextensions/firebase-cypress:open',
-		options: { cwd: projectRoot },
+		options: {
+			...buildCypressOptions(
+				configFile,
+				cypressConfig,
+				projectRoot,
+				undefined,
+				false
+			),
+			cwd: projectRoot
+		},
 		metadata: {
 			technologies: ['cypress'],
 			description: 'Opens Cypress',
@@ -320,7 +341,7 @@ function getInputs(
 	namedInputs: NxJsonConfiguration['namedInputs']
 ): TargetConfiguration['inputs'] {
 	return [
-		...('production' in namedInputs
+		...('production' in namedInputs!
 			? ['default', '^production']
 			: ['default', '^default']),
 		{
@@ -382,17 +403,32 @@ function buildCypressOptions(
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	cypressConfig: any,
 	_projectRoot: string,
-	testingType: 'e2e' | 'component',
-	isCi: boolean,
-): RunExecutorSchema {
-	const config = testingType in cypressConfig ? cypressConfig[testingType] : {};
+	testingType: 'e2e' | 'component' | undefined,
+	isCi: boolean
+): CypressRunnerSchema {
+	const config = testingType && testingType in cypressConfig ? cypressConfig[testingType] : {};
+	if (config?.baseUrl) {
+		return {
+			devServerTarget: isCi
+				? config[NX_PLUGIN_OPTIONS].ciWebServerCommand
+				: config[NX_PLUGIN_OPTIONS].webServerCommands.default,
+			baseUrl: config.baseUrl,
+			cypressConfig: configFilePath,
+			testingType,
+			emulatorCommand: config[NX_PLUGIN_OPTIONS].emulatorCommand
+		};
+	}
 	return {
 		devServerTarget: isCi
-			? config[NX_PLUGIN_OPTIONS].ciWebServerCommand
-			: config[NX_PLUGIN_OPTIONS].webServerCommands.default,
-		baseUrl: config.baseUrl,
+			? cypressConfig["e2e"][NX_PLUGIN_OPTIONS].ciWebServerCommand
+			: 'default' in cypressConfig["e2e"][NX_PLUGIN_OPTIONS].webServerCommands
+				? cypressConfig["e2e"][NX_PLUGIN_OPTIONS].webServerCommands.default
+				: cypressConfig["e2e"][NX_PLUGIN_OPTIONS].webServerCommands[Object.keys(cypressConfig["e2e"][NX_PLUGIN_OPTIONS].webServerCommands)[0]],
 		cypressConfig: configFilePath,
 		testingType,
-		emulatorCommand: config[NX_PLUGIN_OPTIONS].emulatorCommand,
+		baseUrl: 'e2e' in cypressConfig ? cypressConfig['e2e'].baseUrl : undefined,
+		emulatorCommand: 'e2e' in cypressConfig
+			? cypressConfig['e2e'][NX_PLUGIN_OPTIONS].emulatorCommand
+			: cypressConfig['component'][NX_PLUGIN_OPTIONS].emulatorCommand
 	};
 }

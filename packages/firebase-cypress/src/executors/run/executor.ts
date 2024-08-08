@@ -1,25 +1,27 @@
 import { PromiseExecutor } from '@nx/devkit';
 import { RunExecutorSchema } from './schema';
-import { detectFirebase, startFirebaseEmulators } from '../../utils/firebase';
-import startWebServer from '../../utils/dev-server';
+import { detectFirebase, startFirebaseEmulators, terminateEmulatorsIfStarted } from '../../utils/firebase';
+import runCypressInternal from '../../utils/run-cypress';
 
 const runExecutor: PromiseExecutor<RunExecutorSchema> = async (
 	options,
 	context
 ) => {
-	const { isPresent } = detectFirebase(context);
-	let result: {success: boolean};
-	if (isPresent) {
-		for await (const res of startFirebaseEmulators(options.watch, options.emulatorCommand, options, context)) {
-			result = res;
+	try {
+		const { isPresent } = detectFirebase(context);
+		let result: { success: boolean };
+		if (isPresent) {
+			for await (const res of startFirebaseEmulators(options.watch, options.emulatorCommand, options, context)) {
+				result = res;
+			}
+		} else {
+			result = await runCypressInternal(options, context);
 		}
-	} else {
-		for await (const res of startWebServer(options.webServerCommand ?? options.devServerTarget, options.watch, options, context)) {
-			result = res;
-		}
-	}
 
-	return result;
+		return result;
+	} finally {
+		await terminateEmulatorsIfStarted(context)
+	}
 };
 
 export default runExecutor;
