@@ -18,3 +18,5 @@ body:
     options:
     - "Firebase Cypress"
     - "NX Firebase"
+  validations:
+    required: true
