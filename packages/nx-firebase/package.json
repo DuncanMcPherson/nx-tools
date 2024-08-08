@@ -36,5 +36,6 @@
 	"peerDependencies": {
 		"firebase": ">= 8"
 	},
-	"executors": "./executors.json"
+	"executors": "./executors.json",
+	"generators": "./generators.json"
 }
