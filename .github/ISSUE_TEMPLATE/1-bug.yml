@@ -1,14 +1,7 @@
-name: Bug Report
-description: "This form is to report unexpected behavior in the plugins
+name: "Bug Report"
+description: "This form is to report unexpected behavior in the plugin"
 body:
-  - type: dropdown
-    id: plugin-name
-    attributes:
-      label: "Plugin name"
-      description: "Which plugin is experiencing the issue?"
-      multiple: true
-      options:
-        - "Firebase Cypress (@nxextensions/firebase-cypress)"
-        - "NX Firebase (@nxextensions/nx-firebase)"
-    validations:
-      required: true
+- type: textarea
+  attributes:
+    label: "Test issue"
+    description: "This is just a test"
