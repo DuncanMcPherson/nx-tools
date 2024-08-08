@@ -1,5 +1,7 @@
 name: "Bug Report"
 description: "This form is to report unexpected behavior in the plugin"
+labels:
+- bug
 body:
 - type: textarea
   attributes:
