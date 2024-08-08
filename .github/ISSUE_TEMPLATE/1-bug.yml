@@ -1,18 +1,28 @@
-﻿name: Bug Report
+#﻿name: Bug Report
+#body:
+#- type: markdown
+#  attributes:
+#    value: |
+#      Thank you for your patience with these plugins and for your time submitting a bug report.
+#      Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
+#- type: dropdown
+#  id: plugin-name
+#  attributes:
+#    label: Plugin name
+#    description: Which plugin is experiencing the issue?
+#    multiple: true
+#    options:
+#      - Firebase Cypress (@nxextensions/firebase-cypress)
+#      - NX Firebase (@nxextensions/nx-firebase)
+#  validations:
+#    required: true
+
+
+name: "Bug report"
 body:
 - type: markdown
   attributes:
-    value: |
-      Thank you for your patience with these plugins and for your time submitting a bug report.
-      Help me help you! Please fill out the entire form below with as much detail as possible to help me reproduce the bug.
-- type: dropdown
-  id: plugin-name
+    value: "Bugs are the worst!"
+- type: textarea
   attributes:
-    label: Plugin name
-    description: Which plugin is experiencing the issue?
-    multiple: true
-    options:
-      - Firebase Cypress (@nxextensions/firebase-cypress)
-      - NX Firebase (@nxextensions/nx-firebase)
-  validations:
-    required: true
+    label: "What's wrong?"
