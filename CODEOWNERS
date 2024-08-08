@@ -1,0 +1,5 @@
+﻿# Any file not covered by a rule below will default to Duncan
+
+* @DuncanMcPherson
+/packages/nx-firebase/**/* @DuncanMcPherson
+/packages/firebase-cypress/**/* @DuncanMcPherson
