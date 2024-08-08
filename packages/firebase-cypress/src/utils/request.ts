@@ -2,25 +2,25 @@
 import { request as httpsRequest } from 'https';
 
 export default function request(
-  url: string,
-  callback: () => void,
-  error: () => void
+	url: string,
+	callback: () => void,
+	error: () => void
 ): Promise<void> {
-  return new Promise((resolve) => {
-    const { protocol } = new URL(url);
+	return new Promise((res) => {
+		const { protocol } = new URL(url);
 
-    const makeRequest = protocol === 'https:' ? httpsRequest : httpRequest;
+		const makeRequest = protocol === 'https:' ? httpsRequest : httpRequest;
 
-    const request = makeRequest(url, () => {
-      callback();
-      resolve();
-    });
+		const request = makeRequest(url, () => {
+			callback();
+			res();
+		});
 
-    request.on('error', () => {
-      error();
-      resolve();
-    });
+		request.on('error', () => {
+			error();
+			res();
+		});
 
-    request.end();
-  });
+		request.end();
+	});
 }

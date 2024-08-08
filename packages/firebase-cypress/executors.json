@@ -9,6 +9,11 @@
       "implementation": "./src/executors/e2e-ci/executor",
       "schema": "./src/executors/e2e-ci/schema.json",
       "description": "e2e-ci executor"
+    },
+    "open": {
+      "implementation": "./src/executors/open/executor",
+      "schema": "./src/executors/open/schema.json",
+      "description": "open executor"
     }
   }
 }

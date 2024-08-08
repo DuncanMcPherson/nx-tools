@@ -1,24 +1,32 @@
 import { PromiseExecutor, ExecutorContext } from '@nx/devkit';
 import { E2eCiExecutorSchema } from './schema';
-import { detectFirebase, startFirebaseEmulators } from '../../utils/firebase';
+import { detectFirebase, startFirebaseEmulators, terminateEmulatorsIfStarted } from '../../utils/firebase';
 import runCypressInternal from '../../utils/run-cypress';
 
 const runExecutor: PromiseExecutor<E2eCiExecutorSchema> = async (
-  options: E2eCiExecutorSchema,
-  context: ExecutorContext
+	options: E2eCiExecutorSchema,
+	context: ExecutorContext
 ) => {
-  const { isPresent, portNumber, projectRoot } = detectFirebase(context);
+	try {
+		const { isPresent } = detectFirebase(context);
+		let result: { success: boolean };
+		if (isPresent) {
+			for await (const res of startFirebaseEmulators(options.watch, options.emulatorCommand, options, context)) {
+				result = res;
+			}
+		} else {
+			result = await runCypressInternal(options, context)
+		}
 
-  let killEmulators: () => void;
-  if (isPresent) {
-    killEmulators = await startFirebaseEmulators(projectRoot, portNumber);
-  }
-
-  const result = await runCypressInternal(options, context);
-
-  killEmulators && killEmulators();
-
-  return result;
+		return result;
+	} catch (err) {
+		console.error(err);
+		return {
+			success: false
+		}
+	} finally {
+		await terminateEmulatorsIfStarted(context);
+	}
 };
 
 export default runExecutor;

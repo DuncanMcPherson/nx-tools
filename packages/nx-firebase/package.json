@@ -1,0 +1,40 @@
+{
+	"name": "@nxextensions/nx-firebase",
+	"version": "1.0.0",
+	"dependencies": {
+		"@nx/devkit": "^19.5.3",
+		"tslib": "^2.3.0",
+		"nx": "^19.5.3",
+		"@nx/js": "^19.5.3",
+		"yargs-parser": "^21.1.1",
+		"npm-run-path": "^4.0.1",
+		"chalk": "^4.1.0"
+	},
+	"type": "commonjs",
+	"main": "./src/index.js",
+	"typings": "./src/index.d.ts",
+	"publishConfig": {
+		"access": "public"
+	},
+	"description": "An unofficial NX plugin for Firebase Applications that would like to use emulators",
+	"repository": {
+		"type": "git",
+		"url": "git+https://github.com/duncanmcpherson/nx-tools.git",
+		"directory": "packages/nx-firebase"
+	},
+	"keywords": [
+		"NX",
+		"Front-end",
+		"Firebase",
+		"emulators"
+	],
+	"author": "Duncan McPherson",
+	"license": "MIT",
+	"bugs": {
+		"url": "https://github.com/duncanmcpherson/nx-tools/issues"
+	},
+	"peerDependencies": {
+		"firebase": ">= 8"
+	},
+	"executors": "./executors.json"
+}
