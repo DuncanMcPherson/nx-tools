@@ -1,7 +1,4 @@
 ﻿name: Bug Report
-about: This form is to report unexpected behavior in the plugins
-labels: 
-  - "type: bug"
 body:
   - type: markdown
     attributes:
