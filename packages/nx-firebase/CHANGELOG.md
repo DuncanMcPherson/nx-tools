@@ -1,3 +1,26 @@
+## 1.2.0 (2024-08-13)
+
+
+### 🚀 Features
+
+- **nx-firebase:** adding x add capability
+
+- **nx-firebase:** adding nx add capability
+
+
+### Documentation
+
+- updated README.md
+
+- updates to documentation and license
+
+- **nx-firebase:** updated README.md to be more project specific
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 1.1.0 (2024-08-08)
 
 
