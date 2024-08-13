@@ -43,5 +43,6 @@
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"generators": "./generators.json"
 }
