@@ -32,7 +32,7 @@ function normalizeOptions(options?: FirebaseExecutorSchema): INormalizedExecutor
 	opts.cwd ??= options.cwd ?? '.';
 	opts.command ??= options.command ?? "npx firebase emulators:start";
 	opts.parallel ??= options.parallel ??  true;
-	opts.readyWhen ??= options.readyWhen ?? "It is now safe to connect";
+	opts.readyWhen ??= "readyWhen" in options ? options.readyWhen : "It is now safe to connect"
 	opts.only ??= options.only ?? [];
 	opts.disableOnly ??= options.disableOnly ?? false;
 
@@ -94,6 +94,8 @@ function startProcess(command: string, cwd: string, readyWhen?: IReadyWhenData):
 		cp.on('exit', (code) => {
 			if (!readyWhen || isReady(readyWhen)) {
 				resolve({success: code === 0});
+			} else {
+				resolve({success: false})
 			}
 		})
 	})

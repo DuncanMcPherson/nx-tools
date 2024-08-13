@@ -27,7 +27,7 @@ jest.mock("@nx/devkit", () => ({
 }))
 
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { Tree, readJsonFile, NxJsonConfiguration } from '@nx/devkit';
+import { Tree, readJsonFile, NxJsonConfiguration, globAsync } from '@nx/devkit';
 
 import { initGenerator } from './generator';
 
@@ -47,6 +47,26 @@ describe('init generator', () => {
 			expect(readJsonFile.mock.calls.length).toBe(2)
 		}
 	});
+
+	it("should throw an error when workspace doesn't contain a firebase.json", async () => {
+		if (isMockFn(globAsync)) {
+			globAsync.mockReset();
+			globAsync.mockImplementation(() => {
+				return new Promise((resolve) => {
+					resolve([]);
+				});
+			});
+		}
+		try {
+			await initGenerator(tree);
+			throw new Error("Test should fail")
+		} catch (e) {
+			if (e.message === "Test should fail") {
+				throw e;
+			}
+			expect(e.message).toEqual(`firebase.json was not found amongst workspace and project files`)
+		}
+	})
 
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	function isMockFn(fn: Function): fn is jest.Mock {
