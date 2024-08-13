@@ -3,9 +3,7 @@
 
 ### 🚀 Features
 
-- **nx-firebase:** adding x add capability
-
-- **nx-firebase:** adding nx add capability
+- **nx-firebase:** adding `nx add` capability
 
 
 ### Documentation
@@ -28,16 +26,7 @@
 
 - **nx-firebase:** added empty shell for the emulators executor
 
-- **firebase-cypress:** finished executors including behavior
-
 - **nx-firebase:** add basic executor and ensured that everything works
-
-
-### Bug fixes
-
-- **firebase-cypress:** updated inferred targets to include dependency target for emulation
-
-- **firebase-cypress:** updated inferred targets to include dependency target for emulation
 
 
 ### ❤️  Thank You
