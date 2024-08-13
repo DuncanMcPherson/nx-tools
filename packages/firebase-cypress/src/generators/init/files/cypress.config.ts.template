@@ -1,0 +1,9 @@
+﻿import { nxE2EPreset } from "@nxextensions/firebase-cypress";
+
+import { defineConfig } from "cypress";
+
+export default defineConfig({
+	e2e: {
+		...nxE2EPreset(__filename, {
+			cypressDir: 'src',
+			webServerCommands: {
