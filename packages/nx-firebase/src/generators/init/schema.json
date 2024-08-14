@@ -4,6 +4,16 @@
 	"title": "",
 	"type": "object",
 	"properties": {
+		"js": {
+			"type": "boolean",
+			"description": "Whether to use JavaScript files instead of TypeScript",
+			"default": false
+		},
+		"jsx": {
+			"type": "boolean",
+			"description": "Whether to use JSX or not",
+			"default": false
+		}
 	},
 	"required": []
 }

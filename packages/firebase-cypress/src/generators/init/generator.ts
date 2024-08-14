@@ -3,16 +3,47 @@ import {
 	readProjectsConfigurationFromProjectGraph,
 	installPackagesTask,
 	globAsync,
-	Tree
+	Tree,
+	ProjectConfiguration,
+	getWorkspaceLayout,
+	addProjectConfiguration,
+	formatFiles,
+	joinPathFragments,
+	offsetFromRoot, generateFiles
 } from '@nx/devkit';
 import * as readLine from 'readline/promises';
 import { join } from 'path';
 import * as process from 'node:process';
+import { getRelativePathToRootTsConfig } from '@nx/js';
 
-const cypressConfigGlob = '**/cypress.*';
 const firebaseJsonGlob = '**/firebase.json';
 
-export async function initGenerator(tree: Tree) {
+export interface InitGeneratorSchema {
+	js?: boolean;
+	jsx?: boolean;
+	hasTsConfig?: boolean;
+	offsetFromProjectRoot?: string;
+	directory?: string;
+}
+
+function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfiguration, tree: Tree) {
+	options ??= {};
+	options.directory ??= 'src'
+	options.js ??= false;
+	options.jsx ??= false;
+
+	const offsetFromProjectRoot = options.directory.split('/')
+		.map(_ => '..')
+		.join('/')
+	options.hasTsConfig = tree.exists(joinPathFragments(project.root, 'tsconfig.json'));
+	return {
+		...options,
+		offsetFromProjectRoot: `${offsetFromProjectRoot}/`,
+		projectConfig: project
+	};
+}
+
+export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	// detect projects
 	const graph = await createProjectGraphAsync({ exitOnError: true });
 	const applicationProjectNames: string[] = [];
@@ -50,6 +81,7 @@ export async function initGenerator(tree: Tree) {
 						continue;
 					case 'y':
 					// TODO: flush out creating an e2e project
+						await createE2EProject(project, tree, options)
 						break;
 
 				}
@@ -60,9 +92,53 @@ export async function initGenerator(tree: Tree) {
 		}
 	}
 	// end loop
+	await formatFiles(tree);
 	return () => {
 		installPackagesTask(tree);
 	};
+}
+
+async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, options: InitGeneratorSchema) {
+	const appsDir = getWorkspaceLayout(tree).appsDir;
+	const newProjectName = `${baseProject.name}-e2e`;
+	const newProjectDir = join(appsDir, newProjectName);
+	const newProject: ProjectConfiguration = {
+		name: newProjectName,
+		projectType: 'application',
+		root: newProjectDir,
+		sourceRoot: join(newProjectDir, 'src'),
+		implicitDependencies: [baseProject.name]
+	}
+	options = normalizeOptions(options, newProject, tree);
+	addProjectConfiguration(tree, newProjectName, newProject);
+	await createCypressConfig(tree, newProject, options);
+}
+
+async function createCypressConfig(tree: Tree, projectConfig: ProjectConfiguration, options: InitGeneratorSchema) {
+	if (
+		tree.exists(joinPathFragments(projectConfig.root, 'cypress.config.ts')) ||
+		tree.exists(joinPathFragments(projectConfig.root, 'cypress.config.js'))
+	) {
+		return;
+	}
+
+	const templateVars = {
+		...options,
+		jsx: !!options.jsx,
+		offsetFromRoot: offsetFromRoot(projectConfig.root),
+		offsetFromProjectRoot: options.hasTsConfig ? options.offsetFromProjectRoot : '',
+		tsConfigPath: options.hasTsConfig ?
+			`${options.offsetFromProjectRoot}tsconfig.json` :
+			getRelativePathToRootTsConfig(tree, projectConfig.root),
+		ext: ''
+	}
+
+	generateFiles(
+		tree,
+		join(__dirname, 'files/common'),
+		projectConfig.root,
+		templateVars
+	);
 }
 
 export default initGenerator;
