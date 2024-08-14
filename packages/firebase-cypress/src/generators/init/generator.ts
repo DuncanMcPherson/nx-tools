@@ -9,7 +9,7 @@ import {
 	addProjectConfiguration,
 	formatFiles,
 	joinPathFragments,
-	offsetFromRoot, generateFiles
+	offsetFromRoot, generateFiles, readJson
 } from '@nx/devkit';
 import * as readLine from 'readline/promises';
 import { join } from 'path';
@@ -28,13 +28,13 @@ export interface InitGeneratorSchema {
 
 function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfiguration, tree: Tree) {
 	options ??= {};
-	options.directory ??= 'src'
+	options.directory ??= 'src';
 	options.js ??= false;
 	options.jsx ??= false;
 
 	const offsetFromProjectRoot = options.directory.split('/')
 		.map(_ => '..')
-		.join('/')
+		.join('/');
 	options.hasTsConfig = tree.exists(joinPathFragments(project.root, 'tsconfig.json'));
 	return {
 		...options,
@@ -69,7 +69,9 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 				input: process.stdin,
 				output: process.stdout
 			});
+
 			let answer: string;
+			let js: string;
 			while (!answer || answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
 				answer = await rl.question(`Would you like to generate an e2e project for ${project.name}? [Y/n] `);
 				if (!answer) {
@@ -80,13 +82,22 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 						//Do nothing - The user does not want to create a project
 						continue;
 					case 'y':
-					// TODO: flush out creating an e2e project
-						await createE2EProject(project, tree, options)
+						// TODO: flush out creating an e2e project
+						while (js?.toLowerCase() !== 'y' && js?.toLowerCase() !== 'n') {
+							js = await rl.question('Does this project use Typescript? [Y/n] ');
+							if (js === '' || js.toLowerCase() === 'y') {
+								options.js = false;
+								js = 'y';
+							} else if (js.toLowerCase() === 'n') {
+								options.js = true;
+							}
+						}
+						// generate new files
+						await createE2EProject(project, tree, options);
 						break;
 
 				}
 			}
-			// generate new files
 		} else {
 			// update existing files
 		}
@@ -108,7 +119,7 @@ async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, o
 		root: newProjectDir,
 		sourceRoot: join(newProjectDir, 'src'),
 		implicitDependencies: [baseProject.name]
-	}
+	};
 	options = normalizeOptions(options, newProject, tree);
 	addProjectConfiguration(tree, newProjectName, newProject);
 	await createCypressConfig(tree, newProject, options);
@@ -131,7 +142,7 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 			`${options.offsetFromProjectRoot}tsconfig.json` :
 			getRelativePathToRootTsConfig(tree, projectConfig.root),
 		ext: ''
-	}
+	};
 
 	generateFiles(
 		tree,
@@ -139,6 +150,44 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 		projectConfig.root,
 		templateVars
 	);
+
+	if (options.js) {
+		if (isEsmProject(tree, projectConfig.root)) {
+			generateFiles(
+				tree,
+				join(__dirname, 'files/config-js-esm'),
+				projectConfig.root,
+				templateVars
+			);
+		} else {
+			generateFiles(
+				tree,
+				join(__dirname, 'files/config-js-cjs'),
+				projectConfig.root,
+				templateVars
+			);
+		}
+	} else {
+		generateFiles(
+			tree,
+			join(__dirname, 'files/config-ts'),
+			projectConfig.root,
+			templateVars
+		);
+	}
+}
+
+function isEsmProject(tree: Tree, projectRoot: string) {
+	let packageJson: any;
+	if (tree.exists(joinPathFragments(projectRoot, 'package.json'))) {
+		packageJson = readJson(
+			tree,
+			joinPathFragments(projectRoot, 'package.json')
+		);
+	} else {
+		packageJson = readJson(tree, 'package.json');
+	}
+	return packageJson.type === 'module';
 }
 
 export default initGenerator;
