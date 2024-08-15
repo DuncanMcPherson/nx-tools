@@ -9,6 +9,12 @@ A plugin for Nx that auto-detects Firebase in your project and starts the emulat
 
 `npm i @nxextensions/firebase-cypress --save-dev`
 
+or run:
+
+`nx add @nxextensions/firebase-cypress`
+
+to automatically configure and install the plugin.
+
 ## Configuration
 
 In `nx.json` add:
@@ -29,3 +35,9 @@ In `nx.json` add:
   ]
 }
 ```
+
+## Dependencies
+
+Firebase Cypress depends on the following package(s) to run properly:
+
+`@nxextensions/nx-firebase`
