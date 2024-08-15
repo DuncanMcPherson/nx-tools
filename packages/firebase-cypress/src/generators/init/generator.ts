@@ -9,12 +9,17 @@ import {
 	addProjectConfiguration,
 	formatFiles,
 	joinPathFragments,
-	offsetFromRoot, generateFiles, readJson
+	offsetFromRoot, generateFiles, readJson, ProjectGraph, readNxJson,
+	targetToTargetString
 } from '@nx/devkit';
+import { addPlugin as _addPlugin } from '@nx/devkit/src/utils/add-plugin';
 import * as readLine from 'readline/promises';
-import { join } from 'path';
 import * as process from 'node:process';
 import { getRelativePathToRootTsConfig } from '@nx/js';
+import { createNodesV2 } from '../../target-generator';
+import { join } from 'path';
+import { installedCypressVersion } from '../../utils/cypress-version';
+import { addDefaultE2eConfig } from '../../utils/config';
 
 const firebaseJsonGlob = '**/firebase.json';
 
@@ -24,6 +29,9 @@ export interface InitGeneratorSchema {
 	hasTsConfig?: boolean;
 	offsetFromProjectRoot?: string;
 	directory?: string;
+	addPlugin?: boolean;
+	bundler?: 'vite' | 'webpack';
+	baseUrl?: string;
 }
 
 function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfiguration, tree: Tree) {
@@ -33,9 +41,12 @@ function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfigur
 	options.jsx ??= false;
 
 	const offsetFromProjectRoot = options.directory.split('/')
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
 		.map(_ => '..')
 		.join('/');
 	options.hasTsConfig = tree.exists(joinPathFragments(project.root, 'tsconfig.json'));
+	options.bundler ??= 'webpack';
+	options.baseUrl ??= 'http://localhost:4200';
 	return {
 		...options,
 		offsetFromProjectRoot: `${offsetFromProjectRoot}/`,
@@ -44,8 +55,17 @@ function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfigur
 }
 
 export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
-	// detect projects
+	// set plugin options
+	const nxJson = readNxJson(tree);
+
+	const addPlugins = options.addPlugin = process.env.NX_ADD_PLUGINS !== 'false' &&
+		nxJson.useInferencePlugins !== false;
 	const graph = await createProjectGraphAsync({ exitOnError: true });
+
+	if (addPlugins) {
+		await addPlugin(tree, graph, true)
+	}
+	// detect projects
 	const applicationProjectNames: string[] = [];
 	Object.keys(graph.nodes).forEach((p) => {
 		if (graph.nodes[p].type === 'app') {
@@ -60,8 +80,8 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	for (const project of applicationProjects) {
 		// determine if valid e2e project exists
 		const e2eProject = Object.keys(projects.projects).map(key => projects.projects[key]).filter(x => x.implicitDependencies?.includes(project.name));
-		console.log(e2eProject);
-		const firebaseJson = await globAsync(tree, [join(project.root, firebaseJsonGlob)]);
+
+		const firebaseJson = await globAsync(tree, [joinPathFragments(project.root, firebaseJsonGlob)]);
 		if ((!e2eProject || e2eProject.length === 0) && firebaseJson.length > 0) {
 			console.log(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}`);
 			// prompt to generate e2e project for un-covered projects
@@ -95,11 +115,12 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 						// generate new files
 						await createE2EProject(project, tree, options);
 						break;
-
 				}
 			}
-		} else {
+		} else if (firebaseJson.length > 0) {
 			// update existing files
+			options = normalizeOptions(options, e2eProject[0], tree);
+			await injectConfiguration(tree, project, addPlugins, e2eProject[0], options)
 		}
 	}
 	// end loop
@@ -112,17 +133,18 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, options: InitGeneratorSchema) {
 	const appsDir = getWorkspaceLayout(tree).appsDir;
 	const newProjectName = `${baseProject.name}-e2e`;
-	const newProjectDir = join(appsDir, newProjectName);
+	const newProjectDir = joinPathFragments(appsDir, newProjectName);
 	const newProject: ProjectConfiguration = {
 		name: newProjectName,
 		projectType: 'application',
 		root: newProjectDir,
-		sourceRoot: join(newProjectDir, 'src'),
+		sourceRoot: joinPathFragments(newProjectDir, 'src'),
 		implicitDependencies: [baseProject.name]
 	};
 	options = normalizeOptions(options, newProject, tree);
 	addProjectConfiguration(tree, newProjectName, newProject);
 	await createCypressConfig(tree, newProject, options);
+	await injectConfiguration(tree, baseProject, options.addPlugin ?? true, newProject, options)
 }
 
 async function createCypressConfig(tree: Tree, projectConfig: ProjectConfiguration, options: InitGeneratorSchema) {
@@ -177,7 +199,95 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 	}
 }
 
+async function injectConfiguration(tree: Tree, projectConfig: ProjectConfiguration, _addPlugin: boolean, e2eProject: ProjectConfiguration, options: InitGeneratorSchema) {
+	const projectServeTarget = projectConfig.targets?.['serve'];
+	if (!projectServeTarget) {
+		console.warn(`The current project: ${projectConfig.name} does not have a serve target. Skipping configuration for this project`)
+	}
+	const cyVersion = installedCypressVersion();
+	const filesToUse = cyVersion && cyVersion < 10 ? 'v9' : 'v10';
+
+	const hasTsConfig = tree.exists(
+		joinPathFragments(e2eProject.root, 'tsconfig.json')
+	);
+	const offsetFromProjectRoot = options.directory
+		.split('/')
+		// eslint-disable-next-line @typescript-eslint/no-unused-vars
+		.map(_ => '..')
+		.join('/');
+
+	const fileOpts = {
+		...options,
+		project: projectConfig.name,
+		dir: options.directory ?? 'src',
+		ext: options.js ? 'js' : 'ts',
+		offsetFromRoot: offsetFromRoot(e2eProject.root),
+		offsetFromProjectRoot,
+		projectRoot: projectConfig.root,
+		tsConfigPath: hasTsConfig
+			? `${offsetFromProjectRoot}/tsconfig.json`
+			: getRelativePathToRootTsConfig(tree, e2eProject.root),
+		tmpl: ''
+	};
+
+	generateFiles(
+		tree,
+		join(__dirname, 'files', filesToUse),
+		e2eProject.root,
+		fileOpts
+	);
+
+	if (filesToUse === 'v10') {
+		// TODO: consider auto-detecting javascript
+		const cyFile = joinPathFragments(
+			e2eProject.root,
+			options.js ? 'cypress.config.js' : 'cypress.config.ts'
+		);
+		const webServerCommands: Record<string, string> = {};
+		let ciWebServerCommand: string;
+		const targetString = targetToTargetString({project: projectConfig.name, target: 'serve'});
+		webServerCommands.default = `nx run ${targetString}`;
+		if (projectServeTarget.configurations?.['production']) {
+			webServerCommands.production = `nx run ${targetString}:production`;
+		}
+
+		if (projectConfig.targets?.['serve-static']) {
+			ciWebServerCommand = `nx run ${projectConfig.name}: serve-static`;
+		}
+
+		const updatedCyConfig = await addDefaultE2eConfig(
+			tree.read(cyFile, 'utf-8'),
+			{
+				cypressDir: options.directory,
+				bundler: options.bundler === 'vite' ? 'vite' : undefined,
+				webServerCommands,
+				ciWebServerCommand: ciWebServerCommand,
+			},
+			options.baseUrl
+		);
+
+		tree.write(cyFile, updatedCyConfig)
+	}
+}
+
+function addPlugin(tree: Tree, graph: ProjectGraph, updatePackageScripts: boolean) {
+	return _addPlugin(
+		tree,
+		graph,
+		'@nxextensions/firebase-cypress',
+		createNodesV2,
+		{
+			targetName: ['e2e'],
+			openTargetName: ['open-cypress'],
+			componentTestingTargetName: ['component-test'],
+			ciTargetName: ['e2e-ci']
+		},
+		updatePackageScripts
+	)
+}
+
 function isEsmProject(tree: Tree, projectRoot: string) {
+	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	let packageJson: any;
 	if (tree.exists(joinPathFragments(projectRoot, 'package.json'))) {
 		packageJson = readJson(
@@ -190,4 +300,5 @@ function isEsmProject(tree: Tree, projectRoot: string) {
 	return packageJson.type === 'module';
 }
 
+// noinspection JSUnusedGlobalSymbols
 export default initGenerator;

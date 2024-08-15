@@ -65,18 +65,18 @@
 			}
 		},
 		{
+			"plugin": "@nxextensions/nx-firebase",
+			"options": {
+				"firebaseEmulatorsTargetName": "firebase-emulators"
+			}
+		},
+		{
 			"plugin": "@nxextensions/firebase-cypress",
 			"options": {
 				"targetName": "e2e",
 				"openTargetName": "open-cypress",
 				"componentTestingTargetName": "component-test",
 				"ciTargetName": "e2e-ci"
-			}
-		},
-		{
-			"plugin": "@nxextensions/nx-firebase",
-			"options": {
-				"firebaseEmulatorsTargetName": "firebase-emulators"
 			}
 		}
 	],
