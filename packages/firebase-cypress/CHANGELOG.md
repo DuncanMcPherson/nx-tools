@@ -1,3 +1,24 @@
+## 4.2.0 (2024-08-15)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** added support for x add including new project configuration
+
+
+### Documentation
+
+- updated README.md
+
+- updates to documentation and license
+
+- **firebase-cypress:** updated README
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.1.0 (2024-08-08)
 
 

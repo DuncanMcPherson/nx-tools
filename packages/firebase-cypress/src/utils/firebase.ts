@@ -9,6 +9,7 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import { targetStringToTarget } from './target-string-to-target';
 import { CypressRunnerSchema } from './cypress-runner.schema';
+// @ts-expect-error this is the only way to import kill-port
 import * as killPort from 'kill-port';
 import runCypressInternal from './run-cypress';
 
@@ -77,7 +78,7 @@ export async function terminateEmulatorsIfStarted(context: ExecutorContext): Pro
 
 	try {
 		for (const port of portsArray) {
-			await killPort(port);
+			await killPort(+port);
 		}
 	} catch (e) {
 		console.error(e);
