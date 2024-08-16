@@ -26,9 +26,9 @@ jest.mock('@nx/devkit', () => ({
 			}
 		};
 	}),
-	runExecutor: jest.fn(function *(){
+	runExecutor: jest.fn(function* () {
 		yield new Promise((res) => {
-			res({success: true});
+			res({ success: true });
 		});
 	})
 }));
@@ -50,6 +50,7 @@ jest.mock('cypress', () => ({
 }));
 jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/request');
+jest.mock('kill-port')
 jest.mock('child_process', () => ({
 	spawn: jest.fn(() => {
 		return {
@@ -58,11 +59,6 @@ jest.mock('child_process', () => ({
 		};
 	})
 }));
-jest.mock('kill-port', () => {
-	return async () => {
-		return Promise.resolve();
-	}
-})
 import { E2eCiExecutorSchema } from './schema';
 import executor from './executor';
 import { ExecutorContext } from '@nx/devkit';

@@ -72,7 +72,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 			applicationProjectNames.push(graph.nodes[p].name);
 		}
 	});
-	console.log(`Found the following projects: ${applicationProjectNames.join(', ')}`);
+	// console.log(`Found the following projects: ${applicationProjectNames.join(', ')}`);
 
 	const projects = readProjectsConfigurationFromProjectGraph(graph);
 	const applicationProjects = Object.keys(projects.projects).map((key) => applicationProjectNames.includes(key) && projects.projects[key]).filter(x => typeof x === 'object');
@@ -83,7 +83,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 
 		const firebaseJson = await globAsync(tree, [joinPathFragments(project.root, firebaseJsonGlob)]);
 		if ((!e2eProject || e2eProject.length === 0) && firebaseJson.length > 0) {
-			console.log(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}`);
+			// console.log(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}`);
 			// prompt to generate e2e project for un-covered projects
 			const rl = readLine.createInterface({
 				input: process.stdin,
@@ -202,7 +202,8 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 async function injectConfiguration(tree: Tree, projectConfig: ProjectConfiguration, _addPlugin: boolean, e2eProject: ProjectConfiguration, options: InitGeneratorSchema) {
 	const projectServeTarget = projectConfig.targets?.['serve'];
 	if (!projectServeTarget) {
-		console.warn(`The current project: ${projectConfig.name} does not have a serve target. Skipping configuration for this project`)
+		console.warn(`The current project: ${projectConfig.name} does not have a serve target. Skipping configuration for this project`);
+		return;
 	}
 	const cyVersion = installedCypressVersion();
 	const filesToUse = cyVersion && cyVersion < 10 ? 'v9' : 'v10';
@@ -252,7 +253,7 @@ async function injectConfiguration(tree: Tree, projectConfig: ProjectConfigurati
 		}
 
 		if (projectConfig.targets?.['serve-static']) {
-			ciWebServerCommand = `nx run ${projectConfig.name}: serve-static`;
+			ciWebServerCommand = `nx run ${projectConfig.name}:serve-static`;
 		}
 
 		const updatedCyConfig = await addDefaultE2eConfig(
