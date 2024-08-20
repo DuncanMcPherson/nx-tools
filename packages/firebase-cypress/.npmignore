@@ -11,3 +11,4 @@ dist/executors.json
 dist/generators.json
 dist/package.json
 dist/README.md
+**/tsconfig*
