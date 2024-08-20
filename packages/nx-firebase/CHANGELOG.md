@@ -1,3 +1,17 @@
+## 1.2.2 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** publish path
+
+- **nx-firebase:** fine tuned publish path
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 1.2.1 (2024-08-20)
 
 
