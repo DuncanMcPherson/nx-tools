@@ -63,7 +63,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	const graph = await createProjectGraphAsync({ exitOnError: true });
 
 	if (addPlugins) {
-		await addPlugin(tree, graph, true)
+		await addPlugin(tree, graph, true);
 	}
 	// detect projects
 	const applicationProjectNames: string[] = [];
@@ -72,7 +72,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 			applicationProjectNames.push(graph.nodes[p].name);
 		}
 	});
-	console.log(`Found the following projects: ${applicationProjectNames.join(', ')}`);
+	process.stdout.write(`Found the following projects: ${applicationProjectNames.join(', ')}`);
 
 	const projects = readProjectsConfigurationFromProjectGraph(graph);
 	const applicationProjects = Object.keys(projects.projects).map((key) => applicationProjectNames.includes(key) && projects.projects[key]).filter(x => typeof x === 'object');
@@ -82,48 +82,21 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		const e2eProject = Object.keys(projects.projects).map(key => projects.projects[key]).filter(x => x.implicitDependencies?.includes(project.name));
 
 		const firebaseJson = await globAsync(tree, [joinPathFragments(project.root, firebaseJsonGlob)]);
-		if ((!e2eProject || e2eProject.length === 0) && firebaseJson.length > 0) {
-			console.log(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}`);
-			// prompt to generate e2e project for un-covered projects
-			const rl = readLine.createInterface({
-				input: process.stdin,
-				output: process.stdout
-			});
-
-			let answer: string;
-			let js: string;
-			while (!answer || answer.toLowerCase() !== 'y' && answer.toLowerCase() !== 'n') {
-				answer = await rl.question(`Would you like to generate an e2e project for ${project.name}? [Y/n] `);
-				if (!answer) {
-					answer = 'y';
-				}
-				switch (answer.toLowerCase()) {
-					case 'n':
-						//Do nothing - The user does not want to create a project
-						continue;
-					case 'y':
-						// TODO: flush out creating an e2e project
-						while (js?.toLowerCase() !== 'y' && js?.toLowerCase() !== 'n') {
-							js = await rl.question('Does this project use Typescript? [Y/n] ');
-							if (js === '' || js.toLowerCase() === 'y') {
-								options.js = false;
-								js = 'y';
-							} else if (js.toLowerCase() === 'n') {
-								options.js = true;
-							}
-						}
-						// generate new files
-						await createE2EProject(project, tree, options);
-						break;
-				}
+		if (!e2eProject || e2eProject.length === 0) {
+			if ((!e2eProject || e2eProject.length === 0) && firebaseJson.length > 0) {
+				process.stdout.write(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}\r\nGenerating files for new E2E project ${project.name}-e2e`);
+				options.js = false;
 			}
+			// generate new files
+			await createE2EProject(project, tree, options);
 		} else if (firebaseJson.length > 0) {
 			// update existing files
 			options = normalizeOptions(options, e2eProject[0], tree);
-			await injectConfiguration(tree, project, addPlugins, e2eProject[0], options)
+			await injectConfiguration(tree, project, addPlugins, e2eProject[0], options);
 		}
 	}
-	// end loop
+
+// end loop
 	await formatFiles(tree);
 	return () => {
 		installPackagesTask(tree);
@@ -144,7 +117,7 @@ async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, o
 	options = normalizeOptions(options, newProject, tree);
 	addProjectConfiguration(tree, newProjectName, newProject);
 	await createCypressConfig(tree, newProject, options);
-	await injectConfiguration(tree, baseProject, options.addPlugin ?? true, newProject, options)
+	await injectConfiguration(tree, baseProject, options.addPlugin ?? true, newProject, options);
 }
 
 async function createCypressConfig(tree: Tree, projectConfig: ProjectConfiguration, options: InitGeneratorSchema) {
@@ -246,7 +219,7 @@ async function injectConfiguration(tree: Tree, projectConfig: ProjectConfigurati
 		);
 		const webServerCommands: Record<string, string> = {};
 		let ciWebServerCommand: string;
-		const targetString = targetToTargetString({project: projectConfig.name, target: 'serve'});
+		const targetString = targetToTargetString({ project: projectConfig.name, target: 'serve' });
 		webServerCommands.default = `nx run ${targetString}`;
 		if (projectServeTarget.configurations?.['production']) {
 			webServerCommands.production = `nx run ${targetString}:production`;
@@ -262,12 +235,12 @@ async function injectConfiguration(tree: Tree, projectConfig: ProjectConfigurati
 				cypressDir: options.directory,
 				bundler: options.bundler === 'vite' ? 'vite' : undefined,
 				webServerCommands,
-				ciWebServerCommand: ciWebServerCommand,
+				ciWebServerCommand: ciWebServerCommand
 			},
 			options.baseUrl
 		);
 
-		tree.write(cyFile, updatedCyConfig)
+		tree.write(cyFile, updatedCyConfig);
 	}
 }
 
@@ -284,7 +257,7 @@ function addPlugin(tree: Tree, graph: ProjectGraph, updatePackageScripts: boolea
 			ciTargetName: ['e2e-ci']
 		},
 		updatePackageScripts
-	)
+	);
 }
 
 function isEsmProject(tree: Tree, projectRoot: string) {
