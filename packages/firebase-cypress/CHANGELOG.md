@@ -1,3 +1,15 @@
+## 4.3.1 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** publish path
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.3.0 (2024-08-20)
 
 
