@@ -19,7 +19,7 @@ import { createNodesV2 } from '../../target-generator';
 import { join } from 'path';
 import { installedCypressVersion } from '../../utils/cypress-version';
 import { addDefaultE2eConfig } from '../../utils/config';
-import { spawnSync } from 'child_process';
+import { execSync } from 'child_process';
 
 const firebaseJsonGlob = '**/firebase.json';
 
@@ -62,7 +62,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		nxJson.useInferencePlugins !== false;
 	const graph = await createProjectGraphAsync({ exitOnError: true });
 	if (!nxJson.plugins.find((x: any) => x.name === '@nxextensions/nx-firebase')) {
-		spawnSync('npx nx add @nxextensions/nx-firebase')
+		execSync('npx nx add @nxextensions/nx-firebase')
 	}
 
 	if (addPlugins) {

@@ -9,7 +9,7 @@
 			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/packages/firebase-cypress",
+				"outputPath": "{projectRoot}/dist/",
 				"main": "packages/firebase-cypress/src/index.ts",
 				"tsConfig": "packages/firebase-cypress/tsconfig.lib.json",
 				"assets": [
