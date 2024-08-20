@@ -1,3 +1,15 @@
+## 4.2.2 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** An issue exists with the current package type
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.1 (2024-08-20)
 
 
