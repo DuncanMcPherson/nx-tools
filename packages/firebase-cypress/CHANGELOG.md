@@ -1,3 +1,20 @@
+## 4.3.0 (2024-08-20)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** ensure that nx-firebase gets initialized
+
+
+### Performance Enhancements
+
+- **nx-firebase:** Use prebuilt addPlugin method instead of manual update
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.6 (2024-08-20)
 
 

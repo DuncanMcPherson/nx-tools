@@ -1,3 +1,34 @@
+## 1.2.1 (2024-08-20)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** added support for x add including new project configuration
+
+
+### Bug fixes
+
+- **firebase-cypress:** adding logging
+
+- **core:** updated package release location
+
+- **nx-firebase:** make sure dependencies are installed properly
+
+
+### Performance Enhancements
+
+- **nx-firebase:** Use prebuilt addPlugin method instead of manual update
+
+
+### Documentation
+
+- **nx-firebase:** fix auto generated documentation
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 1.2.0 (2024-08-13)
 
 
