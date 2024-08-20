@@ -1,3 +1,15 @@
+## 4.2.1 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** adding logging
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.0 (2024-08-15)
 
 
