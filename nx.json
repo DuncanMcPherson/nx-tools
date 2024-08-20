@@ -129,10 +129,7 @@
 		},
 		"version": {
 			"preVersionCommand": "npx nx run-many -t build",
-			"conventionalCommits": true,
-			"generatorOptions": {
-				"packageRoot": "dist/packages/{projectName}"
-			}
+			"conventionalCommits": true
 		},
 		"projects": ["packages/*"]
 	}

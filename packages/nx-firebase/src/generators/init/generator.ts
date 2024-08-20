@@ -1,28 +1,37 @@
 import {
-	updateNxJson,
-	Tree, readJsonFile, NxJsonConfiguration,
-	globAsync
+	Tree,
+	globAsync, createProjectGraphAsync, readNxJson, ProjectGraph
 } from '@nx/devkit';
-import { join } from 'path';
+import { addPlugin as _addPlugin } from '@nx/devkit/src/utils/add-plugin';
+import { createNodesV2 } from '../../target-generator/index';
 
 export async function initGenerator(tree: Tree) {
 	await validateWorkspaceHasFirebaseJson(tree);
-	const nxJson: NxJsonConfiguration = readJsonFile(join(tree.root, 'nx.json'));
-	nxJson.plugins = nxJson.plugins || [];
-	const pluginConfig = {
-		plugin: '@nxextensions/nx-firebase',
-		options: {
-			firebaseEmulatorsTargetName: 'firebase-emulators'
-		}
+	const nxJson = readNxJson(tree);
+	const addPlugins = process.env.NX_ADD_PLUGINS !== 'false' && nxJson.useInferencePlugins !== false;
+	const graph = await createProjectGraphAsync();
+	if (addPlugins) {
+		await addPlugin(tree, graph, true);
 	}
-	nxJson.plugins.push(pluginConfig);
-	updateNxJson(tree, nxJson)
+}
+
+function addPlugin(tree: Tree, graph: ProjectGraph, updatePackageScripts: boolean) {
+	return _addPlugin(
+		tree,
+		graph,
+		'@nxextensions/nx-firebase',
+		createNodesV2,
+		{
+			firebaseEmulatorsTargetName: ['firebase-emulators']
+		},
+		updatePackageScripts
+	)
 }
 
 async function validateWorkspaceHasFirebaseJson(tree: Tree) {
-	const firebaseJsonFiles = await globAsync(tree, ["**/firebase.json"])
+	const firebaseJsonFiles = await globAsync(tree, ['**/firebase.json']);
 	if (firebaseJsonFiles.length === 0) {
-		throw new Error(`firebase.json was not found amongst workspace and project files`)
+		throw new Error(`firebase.json was not found amongst workspace and project files`);
 	}
 }
 

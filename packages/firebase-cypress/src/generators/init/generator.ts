@@ -13,7 +13,6 @@ import {
 	targetToTargetString
 } from '@nx/devkit';
 import { addPlugin as _addPlugin } from '@nx/devkit/src/utils/add-plugin';
-import * as readLine from 'readline/promises';
 import * as process from 'node:process';
 import { getRelativePathToRootTsConfig } from '@nx/js';
 import { createNodesV2 } from '../../target-generator';
