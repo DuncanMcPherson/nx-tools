@@ -1,3 +1,15 @@
+## 4.2.6 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** Fixed bug where running 'nx add' hangs waiting for input from the user
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.5 (2024-08-20)
 
 
