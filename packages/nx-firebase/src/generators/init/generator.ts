@@ -1,6 +1,6 @@
 import {
 	Tree,
-	globAsync, createProjectGraphAsync, readNxJson, ProjectGraph
+	globAsync, createProjectGraphAsync, readNxJson, ProjectGraph, installPackagesTask
 } from '@nx/devkit';
 import { addPlugin as _addPlugin } from '@nx/devkit/src/utils/add-plugin';
 import { createNodesV2 } from '../../target-generator/index';
@@ -12,6 +12,9 @@ export async function initGenerator(tree: Tree) {
 	const graph = await createProjectGraphAsync();
 	if (addPlugins) {
 		await addPlugin(tree, graph, true);
+	}
+	return () => {
+		installPackagesTask(tree);
 	}
 }
 
