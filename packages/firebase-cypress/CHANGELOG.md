@@ -1,3 +1,15 @@
+## 4.2.4 (2024-08-20)
+
+
+### Bug fixes
+
+- **core:** updated package release location
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.3 (2024-08-20)
 
 
