@@ -1,3 +1,15 @@
+## 4.2.3 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** changed to esm
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.2 (2024-08-20)
 
 
