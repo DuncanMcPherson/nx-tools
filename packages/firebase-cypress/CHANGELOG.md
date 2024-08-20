@@ -1,3 +1,15 @@
+## 4.2.5 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** fixed versioning
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.4 (2024-08-20)
 
 
