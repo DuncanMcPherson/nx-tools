@@ -9,7 +9,7 @@
 			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "dist/packages/nx-firebase",
+				"outputPath": "{projectRoot}/dist",
 				"main": "packages/nx-firebase/src/index.ts",
 				"tsConfig": "packages/nx-firebase/tsconfig.lib.json",
 				"assets": [
