@@ -107,7 +107,7 @@ The type must be one of the following:
 - `docs` - Updates to documentation (Please, when using this type, make sure that your commit does not include code files. Include "*.md" files only)
 - `perf` - Updates to performance. This should be used when refactoring methods, or making improvements to methods
 - `chore` - Changes that have absolutely no effect on users. Such as documentation comments or internal version updates
-- `break` - **USE THIS ONE SPARINGLY!** This is reserved for changes that will break user experience (e.g. Removing an executor or a generator)
+- `break` - **USE THIS ONE SPARINGLY!** This is reserved for changes that will break user experience (e.g. Removing an executor or a generator). When using this type, a code owner will be required to verify changes
 
 #### Scope
 

@@ -72,7 +72,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 			applicationProjectNames.push(graph.nodes[p].name);
 		}
 	});
-	// console.log(`Found the following projects: ${applicationProjectNames.join(', ')}`);
+	console.log(`Found the following projects: ${applicationProjectNames.join(', ')}`);
 
 	const projects = readProjectsConfigurationFromProjectGraph(graph);
 	const applicationProjects = Object.keys(projects.projects).map((key) => applicationProjectNames.includes(key) && projects.projects[key]).filter(x => typeof x === 'object');
@@ -83,7 +83,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 
 		const firebaseJson = await globAsync(tree, [joinPathFragments(project.root, firebaseJsonGlob)]);
 		if ((!e2eProject || e2eProject.length === 0) && firebaseJson.length > 0) {
-			// console.log(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}`);
+			console.log(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}`);
 			// prompt to generate e2e project for un-covered projects
 			const rl = readLine.createInterface({
 				input: process.stdin,
