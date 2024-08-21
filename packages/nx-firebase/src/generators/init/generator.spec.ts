@@ -1,33 +1,30 @@
 jest.mock("@nx/devkit", () => ({
-	readJsonFile: jest.fn((path: string) => {
-		if (path.includes('virtual')) {
-			return {
-			} as NxJsonConfiguration;
-		} else if (path === 'nx.json') {
-			return {
-				plugins: [
-					{
-						plugin: '@nxextensions/nx-firebase',
-						options: {
-							firebaseEmulatorsTargetName: 'firebase-emulators',
-						}
-					}
-				]
-			} as NxJsonConfiguration;
-		}
-
-		return {};
-	}),
 	globAsync: jest.fn(() => {
 		return new Promise((resolve) => {
 			resolve(['fake-path/firebase.json'])
 		});
 	}),
-	updateNxJson: jest.fn()
+	getPackageManagerCommand: jest.fn(),
+	readNxJson: jest.fn(() => ({
+		useInferencePlugins: true
+	})),
+	createProjectGraphAsync: jest.fn(() => {
+		return Promise.resolve({})
+	})
+}));
+jest.mock('@nx/js', () => ({
+	getLockfileName: jest.fn()
+}));
+jest.mock('@nx/devkit/src/utils/config-utils', () => ({
+	loadConfigFile: jest.fn()
+}));
+jest.mock('@nx/devkit/src/utils/add-plugin', () => ({
+	addPlugin: jest.fn(),
 }))
 
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { Tree, readJsonFile, NxJsonConfiguration, globAsync } from '@nx/devkit';
+import { Tree, globAsync } from '@nx/devkit';
+import { addPlugin } from '@nx/devkit/src/utils/add-plugin';
 
 import { initGenerator } from './generator';
 
@@ -40,11 +37,8 @@ describe('init generator', () => {
 
 	it('should run successfully', async () => {
 		await initGenerator(tree);
-		const nxJson = readJsonFile<NxJsonConfiguration>("nx.json");
-		expect(nxJson.plugins.find(x => x["plugin"] === '@nxextensions/nx-firebase')).toBeDefined();
-		expect(jest.isMockFunction(readJsonFile)).toBe(true);
-		if (isMockFn(readJsonFile)) {
-			expect(readJsonFile.mock.calls.length).toBe(2)
+		if (isMockFn(addPlugin)) {
+			expect(addPlugin).toHaveBeenCalled();
 		}
 	});
 

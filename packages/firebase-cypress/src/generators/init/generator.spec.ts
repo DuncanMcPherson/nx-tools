@@ -1,5 +1,10 @@
 jest.mock('@nx/devkit', () => ({
-	readNxJson: jest.fn(() => ({useInferencePlugins: true})),
+	readNxJson: jest.fn(() => (
+		{
+			useInferencePlugins: true,
+			plugins: []
+		})
+	),
 	createProjectGraphAsync: jest.fn(() => {
 		return Promise.resolve({
 			nodes: {
@@ -60,8 +65,30 @@ jest.mock('@nx/devkit/src/utils/add-plugin', () => ({
 }));
 jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/config');
+jest.mock('child_process', () => ({
+	execSync: () => {
+		// intentionally empty
+	}
+}));
+jest.mock("@nx/js", () => ({
+	getRelativePathToRootTsConfig: jest.fn(() => {
+		return "tsconfig.json";
+	})
+}));
+jest.mock('nx/src/devkit-internals', () => ({
+	hashObject: jest.fn(),
+}));
+jest.mock('@nx/devkit/src/utils/calculate-hash-for-create-nodes', () => ({
+	calculateHashForCreateNodes: jest.fn(),
+}));
+jest.mock('@nx/devkit/src/utils/config-utils', () => ({
+	loadConfigFile: jest.fn(),
+}))
+jest.mock('@nx/devkit/src/utils/get-named-inputs', () => ({
+	getNamedInputs: jest.fn(),
+}))
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
-import { Tree, readProjectConfiguration, ProjectConfiguration } from '@nx/devkit';
+import { Tree, ProjectConfiguration } from '@nx/devkit';
 
 import { initGenerator, InitGeneratorSchema } from './generator';
 

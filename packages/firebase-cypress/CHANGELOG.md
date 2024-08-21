@@ -1,3 +1,136 @@
+## 4.4.0 (2024-08-21)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** added scripts to automatically update generators.json and executors.json
+
+- **core:** added scripts to automatically update generators.json and executors.json
+
+
+### Documentation
+
+- **firebase-cypress:** package size trimming
+
+
+### ❤️  Thank You
+
+- Duncan
+- Duncan McPherson
+
+## 4.3.2 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** fine tuned publish path
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.3.1 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** publish path
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.3.0 (2024-08-20)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** ensure that nx-firebase gets initialized
+
+
+### Performance Enhancements
+
+- **nx-firebase:** Use prebuilt addPlugin method instead of manual update
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.2.6 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** Fixed bug where running 'nx add' hangs waiting for input from the user
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.2.5 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** fixed versioning
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.2.4 (2024-08-20)
+
+
+### Bug fixes
+
+- **core:** updated package release location
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.2.3 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** changed to esm
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.2.2 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** An issue exists with the current package type
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.2.1 (2024-08-20)
+
+
+### Bug fixes
+
+- **firebase-cypress:** adding logging
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.2.0 (2024-08-15)
 
 

@@ -1,18 +1,18 @@
 {
   "executors": {
     "run": {
-      "implementation": "./src/executors/run/executor",
-      "schema": "./src/executors/run/schema.json",
+      "implementation": "./dist/dist/dist/src/executors/run/executor",
+      "schema": "./dist/dist/dist/src/executors/run/schema.json",
       "description": "Run Cypress tests with a single run"
     },
     "run-ci": {
-      "implementation": "./src/executors/e2e-ci/executor",
-      "schema": "./src/executors/e2e-ci/schema.json",
+      "implementation": "./dist/dist/dist/src/executors/e2e-ci/executor",
+      "schema": "./dist/dist/dist/src/executors/e2e-ci/schema.json",
       "description": "e2e-ci executor"
     },
     "open": {
-      "implementation": "./src/executors/open/executor",
-      "schema": "./src/executors/open/schema.json",
+      "implementation": "./dist/dist/dist/src/executors/open/executor",
+      "schema": "./dist/dist/dist/src/executors/open/schema.json",
       "description": "open executor"
     }
   }
