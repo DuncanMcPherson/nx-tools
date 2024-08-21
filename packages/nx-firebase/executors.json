@@ -1,8 +1,8 @@
 {
   "executors": {
     "firebase": {
-      "implementation": "./dist/dist/dist/src/executors/firebase/executor",
-      "schema": "./dist/dist/dist/src/executors/firebase/schema.json",
+      "implementation": "./src/executors/firebase/executor",
+      "schema": "./src/executors/firebase/schema.json",
       "description": "firebase executor"
     }
   }
