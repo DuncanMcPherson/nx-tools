@@ -19,7 +19,7 @@ import { createNodesV2 } from '../../target-generator';
 import { join } from 'path';
 import { installedCypressVersion } from '../../utils/cypress-version';
 import { addDefaultE2eConfig } from '../../utils/config';
-import { execSync } from 'child_process';
+import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
 
 const firebaseJsonGlob = '**/firebase.json';
 
@@ -61,9 +61,22 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	const addPlugins = options.addPlugin = process.env.NX_ADD_PLUGINS !== 'false' &&
 		nxJson.useInferencePlugins !== false;
 	const graph = await createProjectGraphAsync({ exitOnError: true });
+	let cp: ChildProcessWithoutNullStreams = undefined;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	if (!nxJson.plugins?.find((x: any) => x.plugin === '@nxextensions/nx-firebase')) {
-		execSync('npx nx add @nxextensions/nx-firebase')
+		cp = spawn('npx nx add @nxextensions/nx-firebase', {
+			detached: false,
+			shell: true
+		});
+		cp.stdout.on('data', (data) => {
+			process.stdout.write(data);
+		});
+		cp.stderr.on('data', (data) => {
+			process.stderr.write(data);
+		});
+		cp.on('error', (err) => {
+			process.stderr.write(err.toString());
+		});
 	}
 
 	if (addPlugins) {
@@ -76,7 +89,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 			applicationProjectNames.push(graph.nodes[p].name);
 		}
 	});
-	process.stdout.write(`Found the following projects: ${applicationProjectNames.join(', ')}`);
+	process.stdout.write(`Found the following projects: ${applicationProjectNames.join(', ')}\r\n`);
 
 	const projects = readProjectsConfigurationFromProjectGraph(graph);
 	const applicationProjects = Object.keys(projects.projects).map((key) => applicationProjectNames.includes(key) && projects.projects[key]).filter(x => typeof x === 'object');
@@ -88,7 +101,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		const firebaseJson = await globAsync(tree, [joinPathFragments(project.root, firebaseJsonGlob)]);
 		if (!e2eProject || e2eProject.length === 0) {
 			if ((!e2eProject || e2eProject.length === 0) && firebaseJson.length > 0) {
-				process.stdout.write(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}\r\nGenerating files for new E2E project ${project.name}-e2e`);
+				process.stdout.write(`The following project was found to not be covered by an e2e project and contain a firebase configuration: ${project.name}\r\nGenerating files for new E2E project ${project.name}-e2e\r\n`);
 				options.js = false;
 			}
 			// generate new files
@@ -100,11 +113,29 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		}
 	}
 
+	if (cp !== undefined) {
+		await waitForChildProcess(cp);
+	}
+
 // end loop
 	await formatFiles(tree);
 	return () => {
 		installPackagesTask(tree);
 	};
+}
+
+function waitForChildProcess(cp: ChildProcessWithoutNullStreams): Promise<void> {
+	return new Promise<void>((res) => {
+		cp.on('exit', (code) => {
+			if (code === 1) {
+				throw new Error('Initialization of @nxextensions/nx-firebase failed')
+			}
+			res();
+		});
+		if (cp.exitCode !== undefined && cp.exitCode !== null) {
+			res();
+		}
+	})
 }
 
 async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, options: InitGeneratorSchema) {
