@@ -1,3 +1,23 @@
+## 1.3.0 (2024-08-21)
+
+
+### 🚀 Features
+
+- **nx-firebase:** added scripts to automatically update generators.json and executors.json
+
+- **core:** added scripts to automatically update generators.json and executors.json
+
+
+### Documentation
+
+- **nx-firebase:** package size trimming
+
+
+### ❤️  Thank You
+
+- Duncan
+- Duncan McPherson
+
 ## 1.2.2 (2024-08-20)
 
 

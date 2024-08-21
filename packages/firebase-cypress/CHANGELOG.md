@@ -1,3 +1,23 @@
+## 4.4.0 (2024-08-21)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** added scripts to automatically update generators.json and executors.json
+
+- **core:** added scripts to automatically update generators.json and executors.json
+
+
+### Documentation
+
+- **firebase-cypress:** package size trimming
+
+
+### ❤️  Thank You
+
+- Duncan
+- Duncan McPherson
+
 ## 4.3.2 (2024-08-20)
 
 
