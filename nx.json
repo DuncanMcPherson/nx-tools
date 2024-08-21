@@ -113,8 +113,11 @@
 			}
 		},
 		"version": {
-			"preVersionCommand": "npx nx run-many -t build",
-			"conventionalCommits": true
+			"preVersionCommand": "npx nx run-many -t processFiles",
+			"conventionalCommits": true,
+			"generatorOptions": {
+				"fallbackCurrentVersionResolver": "disk"
+			}
 		},
 		"projects": ["packages/*"]
 	}
