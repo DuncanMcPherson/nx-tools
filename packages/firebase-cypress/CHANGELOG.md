@@ -1,3 +1,20 @@
+## 4.5.0 (2024-08-21)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** added wait for nx-firebase init
+
+
+### Bug fixes
+
+- **firebase-cypress:** Fixed nx-firebase initialization bug
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.4.0 (2024-08-21)
 
 
