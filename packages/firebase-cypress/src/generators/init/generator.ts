@@ -62,7 +62,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		nxJson.useInferencePlugins !== false;
 	const graph = await createProjectGraphAsync({ exitOnError: true });
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	if (!nxJson.plugins.find((x: any) => x.plugin === '@nxextensions/nx-firebase')) {
+	if (!nxJson.plugins?.find((x: any) => x.plugin === '@nxextensions/nx-firebase')) {
 		execSync('npx nx add @nxextensions/nx-firebase')
 	}
 
