@@ -66,8 +66,7 @@ jest.mock('@nx/devkit/src/utils/add-plugin', () => ({
 jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/config');
 jest.mock('child_process', () => ({
-	execSync: () => {
-		// intentionally empty
+	spawn: () => {
 	}
 }));
 jest.mock("@nx/js", () => ({
