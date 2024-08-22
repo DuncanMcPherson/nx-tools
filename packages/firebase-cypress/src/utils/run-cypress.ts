@@ -4,7 +4,8 @@ import { existsSync, readdirSync, unlinkSync } from 'fs';
 import { installedCypressVersion } from './cypress-version';
 import { CypressRunnerSchema } from './cypress-runner.schema';
 import request from './request';
-import killPort from 'kill-port';
+// @ts-expect-error This is the only way to import this
+import * as killPort from 'kill-port';
 
 // eslint-disable-next-line @typescript-eslint/no-var-requires
 const Cypress = require('cypress');

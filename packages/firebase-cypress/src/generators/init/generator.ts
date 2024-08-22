@@ -64,7 +64,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	let cp: ChildProcessWithoutNullStreams = undefined;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
 	if (!nxJson.plugins?.find((x: any) => x.plugin === '@nxextensions/nx-firebase')) {
-		cp = spawn('npx nx add @nxextensions/nx-firebase', {
+		cp = spawn('npx nx add @nxextensions/nx-firebase --verbose', {
 			detached: false,
 			shell: true
 		});
