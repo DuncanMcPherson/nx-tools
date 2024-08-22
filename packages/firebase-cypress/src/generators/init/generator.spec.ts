@@ -67,6 +67,23 @@ jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/config');
 jest.mock('child_process', () => ({
 	spawn: () => {
+		const cp = new EventEmitter({});
+		cp['stdout'] = new stream.Readable({
+			read() {
+				this.push('Initializing nx-firebase\r\n');
+				this.push(null);
+			}
+		});
+
+		cp['stderr'] = new stream.Readable({
+			read() {
+				this.push(null);
+			}
+		});
+		setTimeout(() => {
+			cp.emit('exit', 0)
+		}, 150)
+		return cp;
 	}
 }));
 jest.mock("@nx/js", () => ({
@@ -90,6 +107,8 @@ import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree, ProjectConfiguration } from '@nx/devkit';
 
 import { initGenerator, InitGeneratorSchema } from './generator';
+import * as stream from 'node:stream';
+import { EventEmitter } from 'node:events';
 
 describe('init generator', () => {
 	let tree: Tree;
