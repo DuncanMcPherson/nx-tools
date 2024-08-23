@@ -32,6 +32,7 @@ export interface InitGeneratorSchema {
 	addPlugin?: boolean;
 	bundler?: 'vite' | 'webpack';
 	baseUrl?: string;
+	skipNxFirebase?: boolean;
 }
 
 function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfiguration, tree: Tree) {
@@ -57,13 +58,14 @@ function normalizeOptions(options: InitGeneratorSchema, project: ProjectConfigur
 export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 	// set plugin options
 	const nxJson = readNxJson(tree);
+	options.skipNxFirebase ??= true;
 
 	const addPlugins = options.addPlugin = process.env.NX_ADD_PLUGINS !== 'false' &&
 		nxJson.useInferencePlugins !== false;
 	const graph = await createProjectGraphAsync({ exitOnError: true });
 	let cp: ChildProcessWithoutNullStreams = undefined;
 	// eslint-disable-next-line @typescript-eslint/no-explicit-any
-	if (!nxJson.plugins?.find((x: any) => x.plugin === '@nxextensions/nx-firebase')) {
+	if (!nxJson.plugins?.find((x: any) => x.plugin === '@nxextensions/nx-firebase') && !options.skipNxFirebase) {
 		cp = spawn('npx nx add @nxextensions/nx-firebase --verbose', {
 			detached: false,
 			shell: true
