@@ -1,26 +1,23 @@
 import { PromiseExecutor } from '@nx/devkit';
 import { OpenExecutorSchema } from './schema';
-import { detectFirebase, startFirebaseEmulators, terminateEmulatorsIfStarted } from '../../utils/firebase';
 import runCypressInternal from '../../utils/run-cypress';
+import { startFirebaseServer, terminateFirebaseServer } from '../../utils/firebase-v2';
 
-// TODO: update other commands to allow for opening cypress
 const runExecutor: PromiseExecutor<OpenExecutorSchema> = async (options, context) => {
+	validateOptions(options);
 	try {
-		const { isPresent } = detectFirebase(context);
-		let result: { success: boolean };
-		options.watch = true;
-		if (isPresent) {
-			for await (const res of startFirebaseEmulators(options.watch, options.emulatorCommand, options, context)) {
-				result = res;
-			}
-		} else {
-			result = await runCypressInternal(options, context)
-		}
+		await startFirebaseServer(context);
 
-		return result;
+		return await runCypressInternal(options, context);
 	} finally {
-		await terminateEmulatorsIfStarted(context);
+		await terminateFirebaseServer(context);
 	}
 };
+
+function validateOptions(options: OpenExecutorSchema) {
+	if (!options.devServerTarget && !options.webServerCommand) {
+		throw new Error("Either devServerTarget or webServerCommand is required. This can be configured in cypress.config.ts, or in project.json");
+	}
+}
 
 export default runExecutor;

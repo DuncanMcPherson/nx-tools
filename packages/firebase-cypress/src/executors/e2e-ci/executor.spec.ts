@@ -26,10 +26,8 @@ jest.mock('@nx/devkit', () => ({
 			}
 		};
 	}),
-	runExecutor: jest.fn(function* () {
-		yield new Promise((res) => {
-			res({ success: true });
-		});
+	joinPathFragments: jest.fn((...paths: string[]) => {
+		return paths.join('/');
 	})
 }));
 
@@ -48,20 +46,33 @@ jest.mock('cypress', () => ({
 	}),
 	open: jest.fn(() => ({}))
 }));
+jest.mock('node:child_process', () => ({
+	exec: jest.fn(() => {
+		const cp = new EventEmitter();
+
+		cp['stdout'] = new Readable({
+			read() {
+				this.push(null);
+			}
+		});
+
+		cp['stderr'] = new Readable({
+			read() {
+				this.push(null);
+			}
+		})
+
+		return cp;
+	})
+}))
 jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/request');
-jest.mock('kill-port')
-jest.mock('child_process', () => ({
-	spawn: jest.fn(() => {
-		return {
-			pid: 1,
-			kill: jest.fn()
-		};
-	})
-}));
+jest.mock('../../utils/kill-port')
 import { E2eCiExecutorSchema } from './schema';
 import executor from './executor';
 import { ExecutorContext } from '@nx/devkit';
+import { EventEmitter } from 'node:events';
+import { Readable } from 'node:stream';
 
 const options: E2eCiExecutorSchema = {
 	cypressConfig: '',

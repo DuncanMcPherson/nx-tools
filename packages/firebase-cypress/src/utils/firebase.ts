@@ -9,7 +9,8 @@ import { readdirSync } from 'fs';
 import { join } from 'path';
 import { targetStringToTarget } from './target-string-to-target';
 import { CypressRunnerSchema } from './cypress-runner.schema';
-import killPort from 'kill-port';
+// @ts-expect-error This is the only way to import this
+import * as killPort from 'kill-port';
 import runCypressInternal from './run-cypress';
 
 export function detectFirebase(context: ExecutorContext): {

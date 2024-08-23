@@ -28,6 +28,9 @@ jest.mock('@nx/devkit', () => ({
 	}),
 	runExecutor: jest.fn(function* () {
 		yield new Promise(res => res({ success: true }));
+	}),
+	joinPathFragments: jest.fn((...paths: string[]) => {
+		return paths.join('/');
 	})
 }));
 
@@ -47,24 +50,38 @@ jest.mock('cypress', () => ({
 	open: jest.fn(() => ({}))
 }));
 jest.mock('../../utils/cypress-version');
-jest.mock('child_process', () => ({
-	spawn: jest.fn(() => {
-		return {
-			pid: 1,
-			kill: jest.fn()
-		};
+jest.mock('node:child_process', () => ({
+	exec: jest.fn(() => {
+		const cp = new EventEmitter();
+
+		cp['stdout'] = new Readable({
+			read() {
+				this.push(null);
+			}
+		})
+
+		cp['stderr'] = new Readable({
+			read() {
+				this.push(null);
+			}
+		})
+
+		return cp;
 	})
 }));
-jest.mock('kill-port');
+jest.mock('../../utils/kill-port');
 jest.mock('../../utils/request');
 import { RunExecutorSchema } from './schema';
 import executor from './executor';
 import { ExecutorContext } from '@nx/devkit';
+import { EventEmitter } from 'node:events';
+import { Readable } from 'node:stream';
 
 const options: RunExecutorSchema = {
 	cypressConfig: '',
 	emulatorCommand: 'test:firebase-emulators',
-	baseUrl: 'https://localhost:4200'
+	baseUrl: 'https://localhost:4200',
+	devServerTarget: 'test:serve'
 };
 const context: ExecutorContext = {
 	root: '',
