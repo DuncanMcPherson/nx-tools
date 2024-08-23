@@ -1,3 +1,24 @@
+## 4.6.0 (2024-08-23)
+
+
+### 🚀 Features
+
+- **firebase-cypress:** rewrote e2e executor
+
+- **firebase-cypress:** moved all executors to internal firebase
+
+- **firebase-cypress:** allow skipping installation of nx-firebase
+
+
+### Performance Enhancements
+
+- **core:** Removed dependency on kill-port
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.5.0 (2024-08-21)
 
 
