@@ -50,7 +50,7 @@ jest.mock('cypress', () => ({
 }));
 jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/request');
-jest.mock('kill-port')
+jest.mock('../../utils/kill-port')
 jest.mock('child_process', () => ({
 	spawn: jest.fn(() => {
 		return {

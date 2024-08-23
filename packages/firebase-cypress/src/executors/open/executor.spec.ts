@@ -1,28 +1,35 @@
 jest.mock('@nx/devkit', () => ({
-	readProjectsConfigurationFromProjectGraph: jest.fn(() => {
+	readProjectsConfigurationFromProjectGraph: jest.fn((): ProjectsConfigurations => {
 		return {
+			version: 2,
 			projects: {
 				test: {
 					root: 'apps/test'
 				},
 				'test-e2e': {
-					implicitDependencies: ['test']
+					implicitDependencies: ['test'],
+					root: 'apps/test-e2e'
 				}
 			}
 		};
 	}),
-	readJsonFile: jest.fn(() => ({
-		emulators: {
-			database: {
-				port: 9000
+	joinPathFragments: jest.fn((...paths: string[]) => {
+		return paths.join('/');
+	}),
+	readJsonFile: jest.fn((path: string) => {
+		if (path.includes('firebase')) {
+			return {
+				emulators: {
+					auth: {
+						port: 9099
+					}
+				}
 			}
+		} else {
+			return {};
 		}
-	})),
-	runExecutor: jest.fn(function* () {
-		yield new Promise(res => res({success: true}));
 	})
 }));
-jest.mock('../../utils/cypress-version')
 jest.mock('fs', () => ({
 	readdirSync: (path: string): string[] => {
 		if (!path.includes('e2e')) {
@@ -37,17 +44,39 @@ jest.mock('cypress', () => ({
 	run: jest.fn(() => ({})),
 	open: jest.fn(() => ({}))
 }));
+jest.mock('../../utils/cypress-version');
 jest.mock('../../utils/request');
+jest.mock('../../utils/kill-port');
+jest.mock('node:child_process', () => ({
+	exec: jest.fn(() => {
+		const cp = new EventEmitter();
+		cp['stdout'] = new Readable({
+			read() {
+				this.push(null);
+			}
+		});
+		cp['stderr'] = new Readable({
+			read() {
+				this.push(null);
+			}
+		});
 
-import { ExecutorContext } from '@nx/devkit';
+		return cp;
+	})
+}));
+
+import { ExecutorContext, ProjectsConfigurations } from '@nx/devkit';
 
 import { OpenExecutorSchema } from './schema';
 import executor from './executor';
+import { EventEmitter } from 'node:events';
+import { Readable } from 'node:stream';
 
 const options: OpenExecutorSchema = {
 	emulatorCommand: 'test:open-firebase',
 	cypressConfig: 'cypress.config.ts',
 	baseUrl: 'http://localhost:4200',
+	devServerTarget: 'test:serve'
 };
 const context: ExecutorContext = {
 	root: '',

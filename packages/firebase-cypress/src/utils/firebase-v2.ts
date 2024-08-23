@@ -3,8 +3,7 @@ import { ExecutorContext, joinPathFragments, readJsonFile } from '@nx/devkit';
 import { getE2EProjectDependency, validateFirebaseProject } from './project-graph';
 import { exec } from 'node:child_process';
 import * as process from 'node:process';
-// @ts-expect-error This is the only way to import this
-import * as killPort from 'kill-port';
+import { killPort } from './kill-port';
 
 export async function startFirebaseServer(context: ExecutorContext) {
 	const port = getFirstEmulatorPort(context);
