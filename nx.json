@@ -58,15 +58,6 @@
 		}
 	},
 	"plugins": [
-		{
-			"plugin": "@nxextensions/firebase-cypress",
-			"options": {
-				"targetName": "e2e",
-				"openTargetName": "open-cypress",
-				"componentTestingTargetName": "component-test",
-				"ciTargetName": "e2e-ci"
-			}
-		}
 	],
 	"generators": {
 		"@nx/angular:application": {
@@ -116,12 +107,12 @@
 			}
 		},
 		"version": {
-			"preVersionCommand": "npx nx run-many -t processFiles",
+			"preVersionCommand": "npx nx run-many -t build",
 			"conventionalCommits": true,
 			"generatorOptions": {
 				"fallbackCurrentVersionResolver": "disk"
 			}
 		},
-		"projects": ["packages/*"]
+		"projects": ["packages/firebase-cypress"]
 	}
 }

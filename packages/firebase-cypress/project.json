@@ -26,7 +26,7 @@
 			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "{projectRoot}/dist/",
+				"outputPath": "dist/packages/firebase-cypress",
 				"main": "packages/firebase-cypress/src/index.ts",
 				"tsConfig": "packages/firebase-cypress/tsconfig.lib.json",
 				"assets": [
@@ -57,7 +57,9 @@
 		"nx-release-publish": {
 			"dependsOn": ["^nx-release-publish"],
 			"executor": "@nx/js:release-publish",
-			"options": {},
+			"options": {
+				"packageRoot": "{workspaceRoot}/dist/packages/{projectName}"
+			},
 			"configurations": {},
 			"parallelism": true
 		},
