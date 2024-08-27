@@ -1,3 +1,7 @@
+## 4.6.8 (2024-08-27)
+
+This was a version bump only for firebase-cypress to align it with other projects, there were no code changes.
+
 ## 4.6.1 (2024-08-27)
 
 
