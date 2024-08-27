@@ -1,3 +1,15 @@
+## 4.6.2 (2024-08-27)
+
+
+### Bug fixes
+
+- **firebase-cypress:** fixed both init error around missing cypress.config and path issues
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.6.8 (2024-08-27)
 
 This was a version bump only for firebase-cypress to align it with other projects, there were no code changes.
