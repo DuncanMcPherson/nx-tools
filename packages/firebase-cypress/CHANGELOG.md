@@ -1,3 +1,15 @@
+## 4.6.3 (2024-08-27)
+
+
+### Bug fixes
+
+- minor bugs
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.6.2 (2024-08-27)
 
 
