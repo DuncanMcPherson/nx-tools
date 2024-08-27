@@ -1,3 +1,22 @@
+## 4.7.0 (2024-08-27)
+
+
+### 🚀 Features
+
+- Added migration to allow automatic updates
+
+- Added migration to allow automatic updates
+
+
+### Bug fixes
+
+- added missing dependency
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.6.3 (2024-08-27)
 
 
