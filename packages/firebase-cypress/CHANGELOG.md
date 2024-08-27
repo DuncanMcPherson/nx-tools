@@ -10,22 +10,6 @@
 
 - Duncan McPherson
 
-## 4.6.8 (2024-08-27)
-
-This was a version bump only for firebase-cypress to align it with other projects, there were no code changes.
-
-## 4.6.1 (2024-08-27)
-
-
-### Bug fixes
-
-- **firebase-cypress:** checking what the listed changes are
-
-
-### ❤️  Thank You
-
-- Duncan McPherson
-
 ## 4.6.0 (2024-08-23)
 
 

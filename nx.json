@@ -113,6 +113,6 @@
 				"fallbackCurrentVersionResolver": "disk"
 			}
 		},
-		"projects": ["packages/firebase-cypress"]
+		"projects": ["packages/*", "!packages/deprecated"]
 	}
 }

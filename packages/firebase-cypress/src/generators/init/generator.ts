@@ -110,7 +110,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		} else if (firebaseJson.length > 0) {
 			// update existing files
 			options = normalizeOptions(options, e2eProject[0], tree);
-			await injectConfiguration(tree, project, addPlugins, e2eProject[0], options);
+			await injectConfiguration(tree, project, e2eProject[0], options);
 		}
 	}
 
@@ -154,7 +154,7 @@ async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, o
 	addProjectConfiguration(tree, newProjectName, newProject);
 	await createCypressConfig(tree, newProject, options);
 	await formatFiles(tree);
-	await injectConfiguration(tree, baseProject, options.addPlugin ?? true, newProject, options);
+	await injectConfiguration(tree, baseProject, newProject, options);
 }
 
 async function createCypressConfig(tree: Tree, projectConfig: ProjectConfiguration, options: InitGeneratorSchema) {
@@ -208,7 +208,7 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 	}
 }
 
-async function injectConfiguration(tree: Tree, projectConfig: ProjectConfiguration, _addPlugin: boolean, e2eProject: ProjectConfiguration, options: InitGeneratorSchema) {
+async function injectConfiguration(tree: Tree, projectConfig: ProjectConfiguration, e2eProject: ProjectConfiguration, options: InitGeneratorSchema) {
 	const projectServeTarget = projectConfig.targets?.['serve'];
 	if (!projectServeTarget) {
 		console.warn(`The current project: ${projectConfig.name} does not have a serve target. Skipping configuration for this project`);
