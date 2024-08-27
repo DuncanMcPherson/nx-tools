@@ -1,0 +1,14 @@
+﻿node_modules
+**/__mocks__/*
+**/*.config.*
+project.json
+.eslintrc.json
+**/*.tgz
+**/*.spec.*
+src/**/*
+dist/CHANGELOG.MD
+dist/executors.json
+dist/generators.json
+dist/package.json
+dist/README.md
+**/tsconfig*
