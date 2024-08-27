@@ -154,6 +154,7 @@ async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, o
 	options = normalizeOptions(options, newProject, tree);
 	addProjectConfiguration(tree, newProjectName, newProject);
 	await createCypressConfig(tree, newProject, options);
+	await formatFiles(tree);
 	await injectConfiguration(tree, baseProject, options.addPlugin ?? true, newProject, options);
 }
 
@@ -265,7 +266,7 @@ async function injectConfiguration(tree: Tree, projectConfig: ProjectConfigurati
 		if (projectConfig.targets?.['serve-static']) {
 			ciWebServerCommand = `nx run ${projectConfig.name}:serve-static`;
 		}
-
+		console.log(tree.listChanges())
 		const updatedCyConfig = await addDefaultE2eConfig(
 			tree.read(cyFile, 'utf-8'),
 			{

@@ -59,18 +59,6 @@
 	},
 	"plugins": [
 		{
-			"plugin": "@nx/eslint/plugin",
-			"options": {
-				"targetName": "eslint:lint"
-			}
-		},
-		{
-			"plugin": "@nxextensions/nx-firebase",
-			"options": {
-				"firebaseEmulatorsTargetName": "firebase-emulators"
-			}
-		},
-		{
 			"plugin": "@nxextensions/firebase-cypress",
 			"options": {
 				"targetName": "e2e",
