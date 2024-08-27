@@ -33,6 +33,11 @@
 						"input": "./packages/firebase-cypress",
 						"glob": "executors.json",
 						"output": "."
+					},
+					{
+						"input": "./packages/firebase-cypress",
+						"glob": "migrations.json",
+						"output": "."
 					}
 				]
 			}
