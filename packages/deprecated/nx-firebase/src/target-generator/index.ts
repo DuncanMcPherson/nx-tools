@@ -8,7 +8,7 @@
 	ProjectConfiguration,
 	readJsonFile,
 	TargetConfiguration,
-	writeJsonFile
+	writeJsonFile,
 } from '@nx/devkit';
 import { existsSync, readdirSync } from 'fs';
 import { hashObject } from 'nx/src/devkit-internals';
@@ -47,7 +47,13 @@ export const createNodesV2: CreateNodesV2<PluginOptions> = [
 		const targetsCache = readTargetsCache(cachePath);
 		try {
 			return await createNodesFromFiles(
-				(configFile, options, context) => createNodesInternal(configFile, options, context, targetsCache),
+				(configFile, options, context) =>
+					createNodesInternal(
+						configFile,
+						options,
+						context,
+						targetsCache
+					),
 				configFiles,
 				options,
 				context
@@ -55,7 +61,7 @@ export const createNodesV2: CreateNodesV2<PluginOptions> = [
 		} finally {
 			writeTargetsToCache(cachePath, targetsCache);
 		}
-	}
+	},
 ];
 
 async function createNodesInternal(
@@ -95,13 +101,13 @@ async function createNodesInternal(
 	const project: Omit<ProjectConfiguration, 'root'> = {
 		projectType: 'application',
 		targets,
-		metadata
+		metadata,
 	};
 
 	return {
 		projects: {
-			[projectRoot]: project
-		}
+			[projectRoot]: project,
+		},
 	};
 }
 
@@ -112,7 +118,7 @@ async function buildFirebaseTargets(
 	context: CreateNodesContext
 ): Promise<PluginTargets> {
 	const firebaseConfig = await loadConfigFile(
-		join(context.workspaceRoot, configFile),
+		join(context.workspaceRoot, configFile)
 	);
 
 	if (!firebaseConfig?.emulators ?? true) {
@@ -124,14 +130,14 @@ async function buildFirebaseTargets(
 	const targets: Record<string, TargetConfiguration> = {};
 
 	targets[options.firebaseEmulatorsTargetName] = {
-		executor: "@nxextensions/nx-firebase:firebase",
+		executor: '@nxextensions/nx-firebase:firebase',
 		parallelism: true,
 		options: {
 			command: 'npx firebase emulators:start',
 			cwd: projectRoot,
-			readyWhen: "It is now safe to connect",
+			readyWhen: 'It is now safe to connect',
 			parallel: true,
-			only: emulatorsToStart
+			only: emulatorsToStart,
 		},
 		metadata: {
 			technologies: ['firebase'],
@@ -139,22 +145,24 @@ async function buildFirebaseTargets(
 			help: {
 				command: `${pmc.exec} firebase emulators:start --help`,
 				example: {
-					args: ['--only', 'database']
-				}
-			}
-		}
-	}
+					args: ['--only', 'database'],
+				},
+			},
+		},
+	};
 
 	return { targets };
 }
 
 function normalizeOptions(options: PluginOptions): PluginOptions {
 	options ??= {};
-	options.firebaseEmulatorsTargetName ??= "firebase-emulators";
+	options.firebaseEmulatorsTargetName ??= 'firebase-emulators';
 	return options;
 }
 
-function getEmulatorsNames(emulatorsObject: {[key: string]: { port: number}}): string[] {
+function getEmulatorsNames(emulatorsObject: {
+	[key: string]: { port: number };
+}): string[] {
 	const res: string[] = [];
 
 	Object.keys(emulatorsObject).forEach((key: string) => {

@@ -1,6 +1,6 @@
 {
 	"name": "@nxextensions/nx-firebase",
-	"version": "1.3.0",
+	"version": "4.6.3",
 	"dependencies": {
 		"@nx/devkit": "^19.5.3",
 		"tslib": "^2.3.0",

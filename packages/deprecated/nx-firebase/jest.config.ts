@@ -1,7 +1,7 @@
 /* eslint-disable */
 export default {
 	displayName: 'nx-firebase',
-	preset: '../../jest.preset.js',
+	preset: '../../../jest.preset.js',
 	transform: {
 		'^.+\\.[tj]s$': [
 			'ts-jest',
@@ -9,5 +9,5 @@ export default {
 		],
 	},
 	moduleFileExtensions: ['ts', 'js', 'html'],
-	coverageDirectory: '../../coverage/packages/nx-firebase',
+	coverageDirectory: '../../../coverage/packages/deprecated/nx-firebase',
 };

@@ -20,7 +20,6 @@ import { join } from 'path';
 import { installedCypressVersion } from '../../utils/cypress-version';
 import { addDefaultE2eConfig } from '../../utils/config';
 import { spawn, ChildProcessWithoutNullStreams } from 'child_process';
-
 const firebaseJsonGlob = '**/firebase.json';
 
 export interface InitGeneratorSchema {
@@ -111,7 +110,7 @@ export async function initGenerator(tree: Tree, options: InitGeneratorSchema) {
 		} else if (firebaseJson.length > 0) {
 			// update existing files
 			options = normalizeOptions(options, e2eProject[0], tree);
-			await injectConfiguration(tree, project, addPlugins, e2eProject[0], options);
+			await injectConfiguration(tree, project, e2eProject[0], options);
 		}
 	}
 
@@ -130,14 +129,14 @@ function waitForChildProcess(cp: ChildProcessWithoutNullStreams): Promise<void> 
 	return new Promise<void>((res) => {
 		cp.on('exit', (code) => {
 			if (code === 1) {
-				throw new Error('Initialization of @nxextensions/nx-firebase failed')
+				throw new Error('Initialization of @nxextensions/nx-firebase failed');
 			}
 			res();
 		});
 		if (cp.exitCode !== undefined && cp.exitCode !== null) {
 			res();
 		}
-	})
+	});
 }
 
 async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, options: InitGeneratorSchema) {
@@ -154,7 +153,8 @@ async function createE2EProject(baseProject: ProjectConfiguration, tree: Tree, o
 	options = normalizeOptions(options, newProject, tree);
 	addProjectConfiguration(tree, newProjectName, newProject);
 	await createCypressConfig(tree, newProject, options);
-	await injectConfiguration(tree, baseProject, options.addPlugin ?? true, newProject, options);
+	await formatFiles(tree);
+	await injectConfiguration(tree, baseProject, newProject, options);
 }
 
 async function createCypressConfig(tree: Tree, projectConfig: ProjectConfiguration, options: InitGeneratorSchema) {
@@ -175,7 +175,6 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 			getRelativePathToRootTsConfig(tree, projectConfig.root),
 		ext: ''
 	};
-
 	generateFiles(
 		tree,
 		join(__dirname, 'files/common'),
@@ -209,7 +208,7 @@ async function createCypressConfig(tree: Tree, projectConfig: ProjectConfigurati
 	}
 }
 
-async function injectConfiguration(tree: Tree, projectConfig: ProjectConfiguration, _addPlugin: boolean, e2eProject: ProjectConfiguration, options: InitGeneratorSchema) {
+async function injectConfiguration(tree: Tree, projectConfig: ProjectConfiguration, e2eProject: ProjectConfiguration, options: InitGeneratorSchema) {
 	const projectServeTarget = projectConfig.targets?.['serve'];
 	if (!projectServeTarget) {
 		console.warn(`The current project: ${projectConfig.name} does not have a serve target. Skipping configuration for this project`);
@@ -247,7 +246,6 @@ async function injectConfiguration(tree: Tree, projectConfig: ProjectConfigurati
 		e2eProject.root,
 		fileOpts
 	);
-
 	if (filesToUse === 'v10') {
 		// TODO: consider auto-detecting javascript
 		const cyFile = joinPathFragments(
@@ -265,7 +263,6 @@ async function injectConfiguration(tree: Tree, projectConfig: ProjectConfigurati
 		if (projectConfig.targets?.['serve-static']) {
 			ciWebServerCommand = `nx run ${projectConfig.name}:serve-static`;
 		}
-
 		const updatedCyConfig = await addDefaultE2eConfig(
 			tree.read(cyFile, 'utf-8'),
 			{

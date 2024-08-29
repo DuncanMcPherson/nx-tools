@@ -1,3 +1,46 @@
+## 4.7.0 (2024-08-27)
+
+
+### 🚀 Features
+
+- Added migration to allow automatic updates
+
+- Added migration to allow automatic updates
+
+
+### Bug fixes
+
+- added missing dependency
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.6.3 (2024-08-27)
+
+
+### Bug fixes
+
+- minor bugs
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
+## 4.6.2 (2024-08-27)
+
+
+### Bug fixes
+
+- **firebase-cypress:** fixed both init error around missing cypress.config and path issues
+
+
+### ❤️  Thank You
+
+- Duncan McPherson
+
 ## 4.6.0 (2024-08-23)
 
 

@@ -1,4 +1,4 @@
-﻿import * as sh from 'shell-exec';
+﻿import sh from 'shell-exec';
 export function killPort(port: number | string, method: 'tcp' | 'udp' = 'tcp'): Promise<void> {
 	port = Number.parseInt(String(port));
 	if (!port) {
@@ -21,7 +21,7 @@ export function killPort(port: number | string, method: 'tcp' | 'udp' = 'tcp'): 
 				}, []);
 
 				return sh(`TaskKill /F /PID ${pids.join(' /PID ')}`);
-			});
+			}).then();
 	}
 
 	return sh('lsof -i -P')
@@ -35,5 +35,5 @@ export function killPort(port: number | string, method: 'tcp' | 'udp' = 'tcp'): 
 			return sh(
 				`lsof -i ${method === 'udp' ? 'udp' : 'tcp'}:${port} | grep ${method === 'udp' ? 'UDP' : 'LISTEN'} | awk '{print $2}' | xargs kill -9`
 			);
-		})
+		}).then();
 }

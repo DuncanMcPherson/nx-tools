@@ -1,26 +1,26 @@
-jest.mock("@nx/devkit", () => ({
+jest.mock('@nx/devkit', () => ({
 	globAsync: jest.fn(() => {
 		return new Promise((resolve) => {
-			resolve(['fake-path/firebase.json'])
+			resolve(['fake-path/firebase.json']);
 		});
 	}),
 	getPackageManagerCommand: jest.fn(),
 	readNxJson: jest.fn(() => ({
-		useInferencePlugins: true
+		useInferencePlugins: true,
 	})),
 	createProjectGraphAsync: jest.fn(() => {
-		return Promise.resolve({})
-	})
+		return Promise.resolve({});
+	}),
 }));
 jest.mock('@nx/js', () => ({
-	getLockfileName: jest.fn()
+	getLockfileName: jest.fn(),
 }));
 jest.mock('@nx/devkit/src/utils/config-utils', () => ({
-	loadConfigFile: jest.fn()
+	loadConfigFile: jest.fn(),
 }));
 jest.mock('@nx/devkit/src/utils/add-plugin', () => ({
 	addPlugin: jest.fn(),
-}))
+}));
 
 import { createTreeWithEmptyWorkspace } from '@nx/devkit/testing';
 import { Tree, globAsync } from '@nx/devkit';
@@ -53,14 +53,16 @@ describe('init generator', () => {
 		}
 		try {
 			await initGenerator(tree);
-			throw new Error("Test should fail")
+			throw new Error('Test should fail');
 		} catch (e) {
-			if (e.message === "Test should fail") {
+			if (e.message === 'Test should fail') {
 				throw e;
 			}
-			expect(e.message).toEqual(`firebase.json was not found amongst workspace and project files`)
+			expect(e.message).toEqual(
+				`firebase.json was not found amongst workspace and project files`
+			);
 		}
-	})
+	});
 
 	// eslint-disable-next-line @typescript-eslint/ban-types
 	function isMockFn(fn: Function): fn is jest.Mock {

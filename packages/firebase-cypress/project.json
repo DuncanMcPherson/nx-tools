@@ -5,28 +5,11 @@
 	"projectType": "library",
 	"tags": [],
 	"targets": {
-		"processFiles": {
-			"executor": "nx:run-commands",
-			"dependsOn": [
-				"build"
-			],
-			"options": {
-				"cwd": "{projectRoot}",
-				"command": "node ../../scripts/process-executors-and-generators.js"
-			}
-		},
-		"revertFiles": {
-			"executor": "nx:run-commands",
-			"options": {
-				"cwd": "{projectRoot}",
-				"command": "node ../../scripts/revert-executors-and-generators.js"
-			}
-		},
 		"build": {
 			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
 			"options": {
-				"outputPath": "{projectRoot}/dist/",
+				"outputPath": "dist/packages/firebase-cypress",
 				"main": "packages/firebase-cypress/src/index.ts",
 				"tsConfig": "packages/firebase-cypress/tsconfig.lib.json",
 				"assets": [
@@ -50,6 +33,11 @@
 						"input": "./packages/firebase-cypress",
 						"glob": "executors.json",
 						"output": "."
+					},
+					{
+						"input": "./packages/firebase-cypress",
+						"glob": "migrations.json",
+						"output": "."
 					}
 				]
 			}
@@ -57,7 +45,9 @@
 		"nx-release-publish": {
 			"dependsOn": ["^nx-release-publish"],
 			"executor": "@nx/js:release-publish",
-			"options": {},
+			"options": {
+				"packageRoot": "{workspaceRoot}/dist/packages/{projectName}"
+			},
 			"configurations": {},
 			"parallelism": true
 		},
