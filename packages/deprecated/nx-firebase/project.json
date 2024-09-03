@@ -1,9 +1,0 @@
-{
-	"name": "nx-firebase",
-	"$schema": "../../../node_modules/nx/schemas/project-schema.json",
-	"sourceRoot": "packages/deprecated/nx-firebase/src",
-	"projectType": "library",
-	"tags": [],
-	"targets": {
-	}
-}

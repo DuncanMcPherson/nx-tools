@@ -18,9 +18,6 @@
 			"@nxextensions/firebase": ["packages/firebase/src/index.ts"],
 			"@nxextensions/firebase-cypress": [
 				"packages/firebase-cypress/src/index.ts"
-			],
-			"@nxextensions/nx-firebase": [
-				"packages/deprecated/nx-firebase/src/index.ts"
 			]
 		}
 	},
