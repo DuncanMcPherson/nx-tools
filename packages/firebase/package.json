@@ -22,9 +22,11 @@
 		"url": "https://github.com/duncanmcpherson/nx-tools/issues"
 	},
 	"dependencies": {
+		"@nx/devkit": "19.6.4",
 		"tslib": "^2.3.0"
 	},
 	"publishConfig": {
 		"access": "public"
-	}
+	},
+	"executors": "./executors.json"
 }
