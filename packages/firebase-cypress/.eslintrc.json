@@ -31,6 +31,12 @@
 			"rules": {
 				"@nx/nx-plugin-checks": "error"
 			}
+		},
+		{
+			"files": ["*.ts"],
+			"rules": {
+				"enforceBuildableLibDependency": 0
+			}
 		}
 	]
 }

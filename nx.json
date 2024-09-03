@@ -57,8 +57,7 @@
 			"inputs": ["production", "^production"]
 		}
 	},
-	"plugins": [
-	],
+	"plugins": [],
 	"generators": {
 		"@nx/angular:application": {
 			"e2eTestRunner": "cypress",
