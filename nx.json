@@ -57,7 +57,14 @@
 			"inputs": ["production", "^production"]
 		}
 	},
-	"plugins": [],
+	"plugins": [
+		{
+			"plugin": "@nx/eslint/plugin",
+			"options": {
+				"targetName": "eslint:lint"
+			}
+		}
+	],
 	"generators": {
 		"@nx/angular:application": {
 			"e2eTestRunner": "cypress",
@@ -112,6 +119,6 @@
 				"fallbackCurrentVersionResolver": "disk"
 			}
 		},
-		"projects": ["packages/*", "!packages/deprecated"]
+		"projects": ["packages/*", "!packages/deprecated", "!packages/*-e2e"]
 	}
 }
