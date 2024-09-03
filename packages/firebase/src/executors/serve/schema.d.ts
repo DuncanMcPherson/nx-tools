@@ -1,1 +1,6 @@
-export interface ServeExecutorSchema {} // eslint-disable-line
+export interface ServeExecutorSchema {
+	baseServeTarget?: string;
+	only?: string[],
+	includeHosting?: boolean;
+	saveDataDir?: string;
+}

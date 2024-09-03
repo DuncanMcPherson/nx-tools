@@ -1,6 +1,6 @@
 {
 	"name": "@nxextensions/firebase",
-	"version": "0.0.0",
+	"version": "1.1.6",
 	"private": false,
 	"description": "An Nx plugin for firebase applications that would like to run the emulators in conjunction with their app",
 	"repository": {
@@ -23,7 +23,8 @@
 	},
 	"dependencies": {
 		"@nx/devkit": "19.6.4",
-		"tslib": "^2.3.0"
+		"tslib": "^2.3.0",
+		"ps-tree": "1.2.0"
 	},
 	"publishConfig": {
 		"access": "public"

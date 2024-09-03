@@ -46,6 +46,14 @@
 			"options": {
 				"jestConfig": "packages/firebase/jest.config.ts"
 			}
+		},
+		"nx-release-publish": {
+			"dependsOn": ["^nx-release-publish"],
+			"executor": "@nx/js:release-publish",
+			"options": {
+				"packageRoot": "{workspaceRoot}/dist/packages/{projectName}"
+			},
+			"parallelism": true
 		}
 	}
 }
