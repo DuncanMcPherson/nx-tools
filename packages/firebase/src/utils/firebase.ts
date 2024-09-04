@@ -1,14 +1,14 @@
 ﻿import { readJsonFile } from 'nx/src/utils/fileutils';
 import request from './request';
-import { exec, spawn, ChildProcess } from 'child_process';
+import { exec, ChildProcess, execSync } from 'child_process';
 import * as es from 'event-stream';
 
-export async function startEmulators(command: string): Promise<(() => void) | undefined> {
+export async function startEmulators(command: string, exportPath?: string): Promise<(() => Promise<void>) | undefined> {
 	if (await isServerUp(command)) {
 		return;
 	}
 
-	const killEmulators = runCommand(command);
+	const killEmulators = runCommand(command, exportPath);
 	await waitForServer(command);
 	return killEmulators;
 }
@@ -43,22 +43,25 @@ function getFirstEmulatorPort(only?: string): number {
 	return port;
 }
 
-function runCommand(command: string): () => void {
+function runCommand(command: string, exportPath?: string): () => Promise<void> {
 	const cp = exec(command);
 
-	return () => {
+	return async () => {
 		if (process.platform === 'win32') {
-			listChildProcessPID(cp.pid, (pids, err) => {
+			if (exportPath) {
+				execSync(`firebase emulators:export ${exportPath}`);
+			}
+			await listChildProcessPID(cp.pid, (pids, err) => {
 				if (err)
 					throw err;
 				pids.forEach(pid => {
-					exec(`taskkill /f /pid ${pid.PID}`)
+					exec(`taskkill /f /pid ${pid.PID}`);
 				});
 			});
 		} else {
 			process.kill(-cp.pid, 'SIGINT');
 		}
-	}
+	};
 }
 
 function waitForServer(command: string): Promise<void> {
@@ -70,7 +73,7 @@ function waitForServer(command: string): Promise<void> {
 			rej();
 		}, 120_000);
 
-		function pollForServer()  {
+		function pollForServer() {
 			void request(`http://localhost:${port}`, () => {
 				clearTimeout(timeout);
 				res();
@@ -80,62 +83,71 @@ function waitForServer(command: string): Promise<void> {
 		}
 
 		pollForServer();
-	})
+	});
 }
 
-function listChildProcessPID(pid: string | number, callback: (pids: Array<{PID: string}>, err: Error | unknown) => void) {
-	let headers: string[] | null = null;
-	if (typeof callback !== 'function') {
-		throw new Error('listChildProcessPID: callback must be a function');
-	}
+function listChildProcessPID(pid: string | number, callback: (pids: Array<{
+	PID: string
+}>, err: Error | unknown) => void): Promise<void> {
+	return new Promise((res, rej) => {
+		let headers: string[] | null = null;
+		if (typeof callback !== 'function') {
+			throw new Error('listChildProcessPID: callback must be a function');
+		}
 
-	if (typeof pid === 'number') {
-		pid = pid.toString();
-	}
+		if (typeof pid === 'number') {
+			pid = pid.toString();
+		}
 
-	let processLister: ChildProcess;
-
-	if (process.platform === 'win32') {
-		processLister = spawn('wmic.exe', ['PROCESS', 'GET', 'Name,ProcessId,ParentProcessId,Status']);
-	} else {
-		processLister = spawn('ps', ['-A', '-o', 'ppid,pid,stat,comm']);
-	}
-
-	es.connect(
-		processLister.stdout,
-		es.split(),
-		es.map((line, cb) => {
-			const columns = line.trim().split(/\s+/);
-			if (!headers) {
-				headers = columns;
-				headers = headers.map(normalizeHeaders);
-				return cb();
+		let processLister: ChildProcess;
+		if (process.platform === 'win32') {
+			processLister = exec('wmic.exe PROCESS GET Name,ProcessId,ParentProcessId,Status');
+		} else {
+			processLister = exec('ps -A -o ppid,pid,stat,comm');
+		}
+		processLister.on('exit', (code: number) => {
+			if (code !== 0) {
+				rej(new Error('wmic.exe exited with code ' + code));
+			} else {
+				res();
 			}
-
-			const row = {};
-			const h = headers.slice();
-			while (h.length) {
-				row[h.shift()] = h.length ? columns.shift() : columns.join(' ')
-			}
-
-			return cb(null, row);
-		}),
-		es.writeArray((err, ps) => {
-			const parents = {},
-				children = [];
-			parents[pid] = true;
-			ps.forEach((p) => {
-				if (parents[p.PPID]) {
-					parents[p.PID] = true;
-					children.push(p);
+		});
+		es.connect(
+			processLister.stdout,
+			es.split(),
+			es.map((line, cb) => {
+				const columns = line.trim().split(/\s+/);
+				if (!headers) {
+					headers = columns;
+					headers = headers.map(normalizeHeaders);
+					return cb();
 				}
-			});
 
-			callback(children, null);
-		})
-	).on('error', (err) => {
-		callback([], err);
-	})
+				const row = {};
+				const h = headers.slice();
+				while (h.length) {
+					row[h.shift()] = h.length ? columns.shift() : columns.join(' ');
+				}
+
+				return cb(null, row);
+			}),
+			es.writeArray((err, ps) => {
+				const parents = {},
+					children = [];
+				parents[pid] = true;
+				ps.forEach((p) => {
+					if (parents[p.PPID]) {
+						parents[p.PID] = true;
+						children.push(p);
+					}
+				});
+
+				callback(children, null);
+			})
+		).on('error', (err) => {
+			callback([], err);
+		});
+	});
 }
 
 function normalizeHeaders(str: string): string {
@@ -146,7 +158,7 @@ function normalizeHeaders(str: string): string {
 		case 'ParentProcessId':
 			return 'PPID';
 		case 'ProcessId':
-			return "PID";
+			return 'PID';
 		case 'Status':
 			return 'STAT';
 		default:
