@@ -11,10 +11,14 @@ variables:
 stages:
     - build
     - test
+    - triage
 sast:
     stage: test
 include:
     - template: Security/SAST.gitlab-ci.yml
+    - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
+      rules:
+          - if: $CI_PIPELINE_SOURCE == "schedule"
 
 main:
     stage: build
