@@ -9,5 +9,3 @@
 ## Related Issues
 
 [//]: # 'Please link the issue that you were working on'
-
-#
