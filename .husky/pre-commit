@@ -1,0 +1,2 @@
+npx nx format
+git update-index --again
