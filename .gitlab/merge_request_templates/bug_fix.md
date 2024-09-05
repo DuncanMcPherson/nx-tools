@@ -1,14 +1,14 @@
 ﻿## Summary
 
-[//]: # (&#40;Please provide a description of the bug that this merge request fixes.&#41;)
+[//]: # '(Please provide a description of the bug that this merge request fixes.)'
 
 ### Updated Behavior
 
-[//]: # (&#40;Please provide a description of the new behavior&#41;)
+[//]: # '(Please provide a description of the new behavior)'
 
 ### Related issues
 
-[//]: # (&#40;Please link any related issues&#41;)
+[//]: # '(Please link any related issues)'
 
 #XX
 
