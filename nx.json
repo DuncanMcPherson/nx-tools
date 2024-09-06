@@ -105,7 +105,7 @@
 			}
 		},
 		"version": {
-			"preVersionCommand": "npx nx run-many -t build",
+			"preVersionCommand": "npx nx run-many -t build-release",
 			"conventionalCommits": true,
 			"generatorOptions": {
 				"fallbackCurrentVersionResolver": "disk"
