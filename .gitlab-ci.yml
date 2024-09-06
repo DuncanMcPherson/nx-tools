@@ -14,9 +14,14 @@ stages:
     - triage
 sast:
     stage: test
+    rules:
+        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 include:
     - template: Security/SAST.gitlab-ci.yml
     - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
+      inputs:
+        api_token: $DEVELOPER_WRITE_API
+        stage: triage
       rules:
           - if: $CI_PIPELINE_SOURCE == "schedule"
 
