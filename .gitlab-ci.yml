@@ -20,8 +20,8 @@ include:
     - template: Security/SAST.gitlab-ci.yml
     - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
       inputs:
-        api_token: $DEVELOPER_WRITE_API
-        stage: triage
+          api_token: $DEVELOPER_WRITE_API
+          stage: triage
       rules:
           - if: $CI_PIPELINE_SOURCE == "schedule"
 
