@@ -51,11 +51,11 @@ async function createReleaseVersions(
 		dryRun: args.dryRun,
 		gitCommit: false,
 		stageChanges: true,
-		projects:
-			(Array.isArray(args.projects) ? args.projects : [args.projects]) ??
-			[],
 		firstRelease: args.firstRelease,
 	};
+	if (args.projects) {
+		versionOptions['projects'] = args.projects;
+	}
 	switch (args.specifier) {
 		case 'prerelease':
 			const preReleaseArgs = {
