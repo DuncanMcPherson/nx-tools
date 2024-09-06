@@ -12,12 +12,10 @@ stages:
     - build
     - triage
     - test
-sast:
-    stage: test
-    rules:
-        - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
 include:
     - template: Security/SAST.gitlab-ci.yml
+      rules:
+          - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
     - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
       inputs:
           api_token: $DEVELOPER_WRITE_API
