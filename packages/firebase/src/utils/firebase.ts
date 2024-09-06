@@ -1,26 +1,32 @@
-﻿import { readJsonFile } from 'nx/src/utils/fileutils';
+﻿import { ExecutorContext, joinPathFragments } from '@nx/devkit';
+import { readJsonFile } from 'nx/src/utils/fileutils';
 import request from './request';
 import { exec, ChildProcess, execSync } from 'child_process';
 import * as es from 'event-stream';
 import { existsSync } from 'fs';
+import { join } from 'path';
 
 export async function startEmulators(
 	command: string,
+	context: ExecutorContext,
 	exportPath?: string
 ): Promise<(() => Promise<void>) | undefined> {
-	if (await isServerUp(command)) {
+	if (await isServerUp(command, context)) {
 		return;
 	}
 
-	const killEmulators = runCommand(command, exportPath);
-	await waitForServer(command);
+	const killEmulators = runCommand(command, context, exportPath);
+	await waitForServer(command, context);
 	return killEmulators;
 }
 
-function isServerUp(command: string): Promise<boolean> {
+function isServerUp(
+	command: string,
+	context: ExecutorContext
+): Promise<boolean> {
 	const parts = command.split('--');
 	const onlyPart = parts.filter((p) => p.includes('only'))[0];
-	const firstPort = getFirstEmulatorPort(onlyPart);
+	const firstPort = getFirstEmulatorPort(context, onlyPart);
 	const url = `http://localhost:${firstPort}`;
 	return new Promise((res) => {
 		return request(
@@ -35,12 +41,16 @@ function isServerUp(command: string): Promise<boolean> {
 	});
 }
 
-function getFirstEmulatorPort(only?: string): number {
-	const projectRoot = '';
+function getFirstEmulatorPort(context: ExecutorContext, only?: string): number {
+	const projectRoot = joinPathFragments(
+		context.cwd,
+		context.projectsConfigurations.projects[context.projectName].root
+	);
+	let path = 'firebase.json';
 	if (!existsSync('firebase.json')) {
-		//temporarily empty
+		path = joinPathFragments(projectRoot, path);
 	}
-	const firebaseConfig = readJsonFile('firebase.json');
+	const firebaseConfig = readJsonFile(path);
 	if (!firebaseConfig?.emulators) {
 		throw new Error(
 			`firebase.json does not contain the necessary emulators configuration`
@@ -57,8 +67,27 @@ function getFirstEmulatorPort(only?: string): number {
 	return port;
 }
 
-function runCommand(command: string, exportPath?: string): () => Promise<void> {
-	const cp = exec(command);
+function runCommand(
+	command: string,
+	context: ExecutorContext,
+	exportPath?: string
+): () => Promise<void> {
+	let cwd = process.cwd();
+	if (!existsSync(join(cwd, 'firebase.json'))) {
+		cwd = joinPathFragments(
+			cwd,
+			context.projectsConfigurations.projects[context.projectName].root
+		);
+	}
+	const cp = exec(command, { cwd });
+
+	cp.stdout?.on('data', (data) => {
+		process.stdout.write(data);
+	});
+
+	cp.stderr?.on('data', (data) => {
+		process.stderr.write(data);
+	});
 
 	return async () => {
 		if (process.platform === 'win32') {
@@ -79,8 +108,11 @@ function runCommand(command: string, exportPath?: string): () => Promise<void> {
 	};
 }
 
-function waitForServer(command: string): Promise<void> {
-	const port = getFirstEmulatorPort(command);
+function waitForServer(
+	command: string,
+	context: ExecutorContext
+): Promise<void> {
+	const port = getFirstEmulatorPort(context, command);
 	return new Promise<void>((res, rej) => {
 		let pollTimeout: NodeJS.Timeout | null;
 		const timeout = setTimeout(() => {

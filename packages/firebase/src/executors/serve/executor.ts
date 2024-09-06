@@ -18,6 +18,7 @@ const runExecutor: PromiseExecutor<ServeExecutorSchema> = async (
 		);
 		killEmulators = await startEmulators(
 			firebaseCommand,
+			context,
 			options.saveDataDir
 		);
 		initProcessListeners(killEmulators);
