@@ -5,6 +5,50 @@
 	"projectType": "library",
 	"tags": [],
 	"targets": {
+		"version-release": {
+			"executor": "nx:run-commands",
+			"options": {
+				"command": "node -r @swc-node/register scripts/publish.ts"
+			}
+		},
+		"build-release": {
+			"dependsOn": ["version-release"],
+			"executor": "@nx/js:tsc",
+			"outputs": ["{options.outputPath}"],
+			"options": {
+				"outputPath": "dist/packages/firebase-cypress",
+				"main": "packages/firebase-cypress/src/index.ts",
+				"tsConfig": "packages/firebase-cypress/tsconfig.lib.json",
+				"assets": [
+					"packages/firebase-cypress/*.md",
+					{
+						"input": "./packages/firebase-cypress/src",
+						"glob": "**/!(*.ts)",
+						"output": "./src"
+					},
+					{
+						"input": "./packages/firebase-cypress/src",
+						"glob": "**/*.d.ts",
+						"output": "./src"
+					},
+					{
+						"input": "./packages/firebase-cypress",
+						"glob": "generators.json",
+						"output": "."
+					},
+					{
+						"input": "./packages/firebase-cypress",
+						"glob": "executors.json",
+						"output": "."
+					},
+					{
+						"input": "./packages/firebase-cypress",
+						"glob": "migrations.json",
+						"output": "."
+					}
+				]
+			}
+		},
 		"build": {
 			"executor": "@nx/js:tsc",
 			"outputs": ["{options.outputPath}"],
