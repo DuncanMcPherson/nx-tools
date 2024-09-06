@@ -1,9 +1,10 @@
 {
 	"name": "@nxextensions/source",
-	"version": "0.0.0",
+	"version": "0.0.1",
 	"license": "MIT",
 	"scripts": {
-		"prepare": "husky"
+		"prepare": "husky",
+		"buildVersion": "node -r @swc-node/register scripts/publish.ts"
 	},
 	"private": true,
 	"dependencies": {
@@ -53,6 +54,8 @@
 		"verdaccio": "^5.0.4"
 	},
 	"nx": {
-		"includedScripts": []
+		"includedScripts": [
+			"buildVersion"
+		]
 	}
 }
