@@ -2,8 +2,12 @@
 import request from './request';
 import { exec, ChildProcess, execSync } from 'child_process';
 import * as es from 'event-stream';
+import { existsSync } from 'fs';
 
-export async function startEmulators(command: string, exportPath?: string): Promise<(() => Promise<void>) | undefined> {
+export async function startEmulators(
+	command: string,
+	exportPath?: string
+): Promise<(() => Promise<void>) | undefined> {
 	if (await isServerUp(command)) {
 		return;
 	}
@@ -15,29 +19,39 @@ export async function startEmulators(command: string, exportPath?: string): Prom
 
 function isServerUp(command: string): Promise<boolean> {
 	const parts = command.split('--');
-	const onlyPart = parts.filter(p => p.includes('only'))[0];
+	const onlyPart = parts.filter((p) => p.includes('only'))[0];
 	const firstPort = getFirstEmulatorPort(onlyPart);
 	const url = `http://localhost:${firstPort}`;
 	return new Promise((res) => {
-		return request(url, () => {
+		return request(
+			url,
+			() => {
 				res(true);
 			},
 			() => {
 				res(false);
-			});
+			}
+		);
 	});
 }
 
 function getFirstEmulatorPort(only?: string): number {
+	const projectRoot = '';
+	if (!existsSync('firebase.json')) {
+		//temporarily empty
+	}
 	const firebaseConfig = readJsonFile('firebase.json');
 	if (!firebaseConfig?.emulators) {
-		throw new Error(`firebase.json does not contain the necessary emulators configuration`);
+		throw new Error(
+			`firebase.json does not contain the necessary emulators configuration`
+		);
 	}
 	let port: number;
-	Object.keys(firebaseConfig.emulators).forEach(emulator => {
+	Object.keys(firebaseConfig.emulators).forEach((emulator) => {
 		if (!port && firebaseConfig.emulators[emulator].port) {
-			if ((only && only.includes(emulator)) || !only)
+			if ((only && only.includes(emulator)) || !only) {
 				port = firebaseConfig.emulators[emulator].port;
+			}
 		}
 	});
 	return port;
@@ -52,9 +66,10 @@ function runCommand(command: string, exportPath?: string): () => Promise<void> {
 				execSync(`firebase emulators:export ${exportPath}`);
 			}
 			await listChildProcessPID(cp.pid, (pids, err) => {
-				if (err)
+				if (err) {
 					throw err;
-				pids.forEach(pid => {
+				}
+				pids.forEach((pid) => {
 					exec(`taskkill /f /pid ${pid.PID}`);
 				});
 			});
@@ -74,21 +89,31 @@ function waitForServer(command: string): Promise<void> {
 		}, 120_000);
 
 		function pollForServer() {
-			void request(`http://localhost:${port}`, () => {
-				clearTimeout(timeout);
-				res();
-			}, () => {
-				pollTimeout = setTimeout(pollForServer, 100);
-			});
+			void request(
+				`http://localhost:${port}`,
+				() => {
+					clearTimeout(timeout);
+					res();
+				},
+				() => {
+					pollTimeout = setTimeout(pollForServer, 100);
+				}
+			);
 		}
 
 		pollForServer();
 	});
 }
 
-function listChildProcessPID(pid: string | number, callback: (pids: Array<{
-	PID: string
-}>, err: Error | unknown) => void): Promise<void> {
+function listChildProcessPID(
+	pid: string | number,
+	callback: (
+		pids: Array<{
+			PID: string;
+		}>,
+		err: Error | unknown
+	) => void
+): Promise<void> {
 	return new Promise((res, rej) => {
 		let headers: string[] | null = null;
 		if (typeof callback !== 'function') {
@@ -101,7 +126,9 @@ function listChildProcessPID(pid: string | number, callback: (pids: Array<{
 
 		let processLister: ChildProcess;
 		if (process.platform === 'win32') {
-			processLister = exec('wmic.exe PROCESS GET Name,ProcessId,ParentProcessId,Status');
+			processLister = exec(
+				'wmic.exe PROCESS GET Name,ProcessId,ParentProcessId,Status'
+			);
 		} else {
 			processLister = exec('ps -A -o ppid,pid,stat,comm');
 		}
@@ -126,7 +153,9 @@ function listChildProcessPID(pid: string | number, callback: (pids: Array<{
 				const row = {};
 				const h = headers.slice();
 				while (h.length) {
-					row[h.shift()] = h.length ? columns.shift() : columns.join(' ');
+					row[h.shift()] = h.length
+						? columns.shift()
+						: columns.join(' ');
 				}
 
 				return cb(null, row);

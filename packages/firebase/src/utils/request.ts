@@ -8,7 +8,7 @@ export default function request(
 	error: (err?: any) => void
 ): Promise<void> {
 	return new Promise((resolve) => {
-		const {protocol} = new URL(url);
+		const { protocol } = new URL(url);
 
 		const makeRequest = protocol === 'https:' ? httpsRequest : httpRequest;
 
@@ -23,5 +23,5 @@ export default function request(
 		});
 
 		request.end();
-	})
+	});
 }

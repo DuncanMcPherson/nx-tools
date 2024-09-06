@@ -2,21 +2,31 @@ import { PromiseExecutor } from '@nx/devkit';
 import { ServeExecutorSchema } from './schema';
 import { startEmulators } from '../../utils/firebase';
 import { startServer } from '../../utils/server';
-import * as rln from "readline";
+import * as rln from 'readline';
 
-const runExecutor: PromiseExecutor<ServeExecutorSchema> = async (options, context) => {
+const runExecutor: PromiseExecutor<ServeExecutorSchema> = async (
+	options,
+	context
+) => {
 	options = validateAndNormalizeOptions(options);
 	let killEmulators: () => Promise<void>;
 	try {
-		const firebaseCommand = getFirebaseCommand(options.only, options.includeHosting, options.saveDataDir);
-		killEmulators = await startEmulators(firebaseCommand, options.saveDataDir);
+		const firebaseCommand = getFirebaseCommand(
+			options.only,
+			options.includeHosting,
+			options.saveDataDir
+		);
+		killEmulators = await startEmulators(
+			firebaseCommand,
+			options.saveDataDir
+		);
 		initProcessListeners(killEmulators);
 		await startServer(options.baseServeTarget, context);
 		return {
-			success: true
+			success: true,
 		};
 	} finally {
-		killEmulators && await killEmulators();
+		killEmulators && (await killEmulators());
 	}
 };
 
@@ -30,7 +40,9 @@ function validateOptions(options: ServeExecutorSchema) {
 		throw new Error('A base server target is required.');
 	}
 	if (options.only?.length && options.includeHosting) {
-		console.warn('Using --includeHosting causes the command to ignore --only.');
+		console.warn(
+			'Using --includeHosting causes the command to ignore --only.'
+		);
 	}
 }
 
@@ -42,7 +54,11 @@ function normalizeOptions(options: ServeExecutorSchema) {
 	return options;
 }
 
-function getFirebaseCommand(emulators?: string[], includeHosting?: boolean, saveDataDir?: string) {
+function getFirebaseCommand(
+	emulators?: string[],
+	includeHosting?: boolean,
+	saveDataDir?: string
+) {
 	let command = 'firebase emulators:start';
 	if (!includeHosting) {
 		let onlyPart = ' --only ';
@@ -66,7 +82,7 @@ function initProcessListeners(cb: () => Promise<void>) {
 	if (process.platform === 'win32') {
 		const rl = rln.createInterface({
 			input: process.stdin,
-			output: process.stdout
+			output: process.stdout,
 		});
 
 		rl.on('SIGINT', () => {
@@ -79,7 +95,7 @@ function initProcessListeners(cb: () => Promise<void>) {
 	process.on('SIGINT', async () => {
 		await cb();
 		process.exit();
-	})
+	});
 }
 
 export default runExecutor;

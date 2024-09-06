@@ -1,6 +1,9 @@
 import { Target, runExecutor, ExecutorContext } from '@nx/devkit';
 
-export async function startServer(targetString: string, context: ExecutorContext) {
+export async function startServer(
+	targetString: string,
+	context: ExecutorContext
+) {
 	const target = targetStringToTarget(targetString);
 	for await (const res of await runExecutor(target, {}, context)) {
 		if (!res.success) {
@@ -12,7 +15,7 @@ export async function startServer(targetString: string, context: ExecutorContext
 function targetStringToTarget(targetString: string): Target {
 	if (targetString.includes(' ')) {
 		const parts = targetString.split(' ');
-		targetString = parts.find(p => p.includes(':'));
+		targetString = parts.find((p) => p.includes(':'));
 	}
 
 	if (targetString.includes(':')) {
@@ -20,9 +23,9 @@ function targetStringToTarget(targetString: string): Target {
 		return {
 			target,
 			configuration,
-			project
-		}
+			project,
+		};
 	}
 
-	throw new Error('Unable to parse base serve target')
+	throw new Error('Unable to parse base serve target');
 }
