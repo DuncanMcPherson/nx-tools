@@ -5,6 +5,7 @@ export async function startServer(
 	context: ExecutorContext
 ) {
 	const target = targetStringToTarget(targetString);
+	// TODO: fail point
 	for await (const res of await runExecutor(target, {}, context)) {
 		if (!res.success) {
 			break;

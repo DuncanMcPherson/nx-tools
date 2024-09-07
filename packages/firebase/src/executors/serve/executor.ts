@@ -89,8 +89,6 @@ function initProcessListeners(cb: () => Promise<void>) {
 		rl.on('SIGINT', () => {
 			process.emit('SIGINT');
 		});
-		process.stdout.write('\n');
-		process.stdout.write(rl.listeners('SIGINT').toString());
 	}
 
 	process.on('SIGINT', async () => {
