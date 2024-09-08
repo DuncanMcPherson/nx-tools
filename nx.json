@@ -56,7 +56,14 @@
 			"inputs": ["production", "^production"]
 		}
 	},
-	"plugins": [],
+	"plugins": [
+		{
+			"plugin": "@nx/eslint/plugin",
+			"options": {
+				"targetName": "eslint:lint"
+			}
+		}
+	],
 	"generators": {
 		"@nx/angular:application": {
 			"e2eTestRunner": "cypress",
@@ -105,13 +112,13 @@
 			}
 		},
 		"version": {
-			"preVersionCommand": "npx nx run-many -t build-release",
+			"preVersionCommand": "npx nx buildVersion && npx nx run-many -t build",
 			"conventionalCommits": true,
 			"generatorOptions": {
 				"fallbackCurrentVersionResolver": "disk"
 			}
 		},
-		"projects": ["packages/*", "!packages/deprecated"]
+		"projects": ["packages/*", "!packages/deprecated", "!packages/*-e2e"]
 	},
 	"nxCloudAccessToken": "Njk4NTc0ZTQtNjJhZS00NzUzLWI4ZjQtNThmMzdhNTdhYjZifHJlYWQtd3JpdGU="
 }

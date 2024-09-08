@@ -1,0 +1,46 @@
+{
+	"$schema": "https://json-schema.org/schema",
+	"version": 2,
+	"title": "Serve project with Firebase",
+	"description": "Serves the selected project with Firebase emulators",
+	"type": "object",
+	"properties": {
+		"baseServeTarget": {
+			"type": "string",
+			"alias": "b",
+			"description": "The nx target for the application that you want to run. (e.g. '--baseServeTarget my-app:serve')",
+			"x-priority": "important"
+		},
+		"only": {
+			"type": "array",
+			"description": "Which emulators you would like to start",
+			"alias": "o",
+			"items": {
+				"type": "string",
+				"enum": [
+					"auth",
+					"functions",
+					"firestore",
+					"database",
+					"pubsub",
+					"storage",
+					"eventarc",
+					"dataconnect",
+					"tasks"
+				]
+			}
+		},
+		"includeHosting": {
+			"type": "boolean",
+			"description": "Whether the hosting emulator should be started. Usage of --includeHosting causes --only to be ignored",
+			"default": false,
+			"alias": "h"
+		},
+		"saveDataDir": {
+			"type": "string",
+			"description": "The directory that you would like to save your emulator data in. The path is relative to the directory that the emulators are started from, which should also include a firebase.json file",
+			"alias": "s"
+		}
+	},
+	"required": []
+}
