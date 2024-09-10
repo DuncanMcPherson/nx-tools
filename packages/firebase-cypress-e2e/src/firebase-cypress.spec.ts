@@ -1,6 +1,6 @@
 import { execSync } from 'child_process';
 import { join, dirname } from 'path';
-import { mkdirSync, rmSync, writeFileSync } from 'fs';
+import { existsSync, mkdirSync, rmSync, writeFileSync } from 'fs';
 
 describe('firebase-cypress', () => {
   let projectDirectory: string;
@@ -36,10 +36,40 @@ describe('firebase-cypress', () => {
   });
 
   it('should create the e2e project properly', () => {
-    rmSync(join(projectDirectory, 'test-project-e2e'), {
+    console.log('Removing old cypress e2e project');
+    rmSync(join(projectDirectory, 'apps/test-project-e2e'), {
       recursive: true,
       force: true,
     });
+
+    console.log('ensuring state of workspace:');
+    expect(existsSync(join(projectDirectory, 'apps/test-project-e2e'))).toEqual(
+      false
+    );
+    console.log(
+      `Result (test-project-e2e): ${existsSync(
+        join(projectDirectory, 'apps', 'test-project-e2e')
+      )}`
+    );
+    expect(existsSync(join(projectDirectory, 'apps/test-project'))).toEqual(
+      true
+    );
+    console.log(
+      `Result (test-project): ${existsSync(
+        join(projectDirectory, 'apps', 'test-project')
+      )}`
+    );
+
+    console.log('initializing firebase cypress');
+    execSync('nx g @nxextensions/firebase-cypress:init', {
+      cwd: projectDirectory,
+      stdio: 'inherit',
+    });
+
+    console.log('validating that proper directory exists');
+    expect(existsSync(join(projectDirectory, 'apps/test-project-e2e'))).toEqual(
+      true
+    );
   });
 });
 
