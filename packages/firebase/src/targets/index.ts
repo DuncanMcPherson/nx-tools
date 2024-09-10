@@ -9,8 +9,6 @@
   readJsonFile,
   TargetConfiguration,
   writeJsonFile,
-  createProjectGraphAsync,
-  readProjectsConfigurationFromProjectGraph,
   joinPathFragments,
 } from '@nx/devkit';
 import { existsSync, readdirSync } from 'fs';
@@ -62,7 +60,7 @@ export const createNodesV2: CreateNodesV2<PluginOptions> = [
   },
 ];
 
-async function createNodesInternal(
+export async function createNodesInternal(
   configFile: string,
   options: PluginOptions,
   context: CreateNodesContext,
@@ -80,6 +78,7 @@ async function createNodesInternal(
     return {};
   }
 
+  // TODO: fail point
   const hash = await calculateHashForCreateNodes(
     projectRoot,
     options,

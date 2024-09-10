@@ -1,1 +1,1 @@
-export * from './targets';
+export { createNodesV2, PluginOptions } from './targets';
