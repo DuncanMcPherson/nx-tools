@@ -14,6 +14,7 @@ export default {
       {
         outputDirectory: '<rootDir>/../../test-results',
         outputName: 'firebase.xml',
+        suiteName: 'firebase',
       },
     ],
   ],

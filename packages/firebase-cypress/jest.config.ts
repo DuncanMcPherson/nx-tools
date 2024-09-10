@@ -15,6 +15,7 @@ export default {
       {
         outputDirectory: '<rootDir>/../../test-results',
         outputName: 'firebase-cypress.xml',
+        suiteName: 'firebase-cypress',
       },
     ],
   ],
