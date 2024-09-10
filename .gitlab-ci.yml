@@ -40,6 +40,7 @@ main:
         - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
         - npx nx-cloud record -- nx format:check --base=$NX_BASE --head=$NX_HEAD
         - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t lint build
+        - npx nx daemon --stop
 tests:
     stage: test
     interruptible: true
