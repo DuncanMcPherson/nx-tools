@@ -8,4 +8,14 @@ export default {
   transformIgnorePatterns: ['node_modules/(?!.*\\.mjs$|@nx)'],
   moduleFileExtensions: ['ts', 'js', 'html'],
   coverageDirectory: '../../coverage/packages/firebase-cypress',
+  reporters: [
+    'default',
+    [
+      'jest-junit',
+      {
+        outputDirectory: '<rootDir>/../../test-results',
+        outputName: 'firebase-cypress.xml',
+      },
+    ],
+  ],
 };

@@ -7,54 +7,59 @@
 # See https://docs.gitlab.com/ee/ci/variables/#cicd-variable-precedence
 image: node:20
 variables:
-    GIT_DEPTH: 0
+  GIT_DEPTH: 0
 stages:
-    - build
-    - triage
-    - test
+  - build
+  - triage
+  - test
 include:
-    - template: Security/SAST.gitlab-ci.yml
-      rules:
-          - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
-    - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
-      inputs:
-          api_token: $DEVELOPER_WRITE_API
-          stage: triage
-      rules:
-          - if: $CI_PIPELINE_SOURCE == "schedule"
+  - template: Security/SAST.gitlab-ci.yml
+    rules:
+      - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+  - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
+    inputs:
+      api_token: $DEVELOPER_WRITE_API
+      stage: triage
+    rules:
+      - if: $CI_PIPELINE_SOURCE == "schedule"
 
 main:
-    stage: build
-    interruptible: true
-    only:
-        - merge_requests
-    cache:
-        key:
-            files:
-                - package-lock.json
-        paths:
-            - .npm/
-    script:
-        - npm ci --cache .npm --prefer-offline
-        - NX_HEAD=$CI_COMMIT_SHA
-        - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
-        - npx nx-cloud record -- nx format:check --base=$NX_BASE --head=$NX_HEAD
-        - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t lint build
-        - npx nx daemon --stop
+  stage: build
+  interruptible: true
+  only:
+    - merge_requests
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - NX_HEAD=$CI_COMMIT_SHA
+    - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
+    - npx nx-cloud record -- nx format:check --base=$NX_BASE --head=$NX_HEAD
+    - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t lint build
+    - npx nx daemon --stop
 tests:
-    stage: test
-    interruptible: true
-    only:
-        - merge_requests
-    cache:
-        key:
-            files:
-                - package-lock.json
-        paths:
-            - .npm/
-    script:
-        - npm ci --cache .npm --prefer-offline
-        - NX_HEAD=$CI_COMMIT_SHA
-        - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
-        - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t test
-        - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t e2e-ci --parallel 1
+  stage: test
+  interruptible: true
+  only:
+    - merge_requests
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - .npm/
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - NX_HEAD=$CI_COMMIT_SHA
+    - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
+    - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t test
+    - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t e2e-ci --parallel 1
+  artifacts:
+    junit: test-results/**/*.xml
+    paths:
+      - test-results/**/*.xml
+    when: always
