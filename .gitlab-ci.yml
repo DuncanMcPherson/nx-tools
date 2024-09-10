@@ -59,7 +59,8 @@ tests:
     - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t test
     - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t e2e-ci --parallel 1
   artifacts:
-    junit: test-results/**/*.xml
+    reports:
+      junit: test-results/**/*.xml
     paths:
       - test-results/**/*.xml
     when: always
