@@ -1,50 +1,50 @@
 {
-	"name": "@nxextensions/firebase-cypress",
-	"version": "4.7.1",
-	"private": false,
-	"description": "An NX Plugin for Firebase Applications that would like to use emulators for E2E testing with Cypress",
-	"repository": {
-		"type": "git",
-		"url": "git+https://github.com/duncanmcpherson/nx-tools.git",
-		"directory": "packages/firebase-cypress"
-	},
-	"keywords": [
-		"NX",
-		"Cypress",
-		"Front-end",
-		"Testing",
-		"firebase",
-		"emulators"
-	],
-	"main": "./src/index.js",
-	"typings": "./src/index.d.ts",
-	"author": "Duncan McPherson",
-	"license": "MIT",
-	"bugs": {
-		"url": "https://github.com/duncanmcpherson/nx-tools/issues"
-	},
-	"executors": "./executors.json",
-	"dependencies": {
-		"@nx/devkit": "19.5.1",
-		"tslib": "^2.3.0",
-		"vite": "^5.3.2",
-		"nx": "^19.5.1",
-		"@nx/js": "^19.5.1",
-		"shell-exec": "^1.1.2"
-	},
-	"peerDependencies": {
-		"cypress": ">= 3"
-	},
-	"peerDependenciesMeta": {
-		"cypress": {
-			"optional": true
-		}
-	},
-	"publishConfig": {
-		"access": "public"
-	},
-	"generators": "./generators.json",
-	"nx-migrations": {
-		"migrations": "./migrations.json"
-	}
+  "name": "@nxextensions/firebase-cypress",
+  "version": "0.0.0-e2e",
+  "private": false,
+  "description": "An NX Plugin for Firebase Applications that would like to use emulators for E2E testing with Cypress",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/duncanmcpherson/nx-tools.git",
+    "directory": "packages/firebase-cypress"
+  },
+  "keywords": [
+    "NX",
+    "Cypress",
+    "Front-end",
+    "Testing",
+    "firebase",
+    "emulators"
+  ],
+  "main": "./src/index.js",
+  "typings": "./src/index.d.ts",
+  "author": "Duncan McPherson",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/duncanmcpherson/nx-tools/issues"
+  },
+  "executors": "./executors.json",
+  "dependencies": {
+    "@nx/devkit": "19.5.1",
+    "tslib": "^2.3.0",
+    "vite": "^5.3.2",
+    "nx": "^19.5.1",
+    "@nx/js": "^19.5.1",
+    "shell-exec": "^1.1.2"
+  },
+  "peerDependencies": {
+    "cypress": ">= 3"
+  },
+  "peerDependenciesMeta": {
+    "cypress": {
+      "optional": true
+    }
+  },
+  "publishConfig": {
+    "access": "public"
+  },
+  "generators": "./generators.json",
+  "nx-migrations": {
+    "migrations": "./migrations.json"
+  }
 }

@@ -1,124 +1,120 @@
 {
-	"$schema": "./node_modules/nx/schemas/nx-schema.json",
-	"defaultBase": "master",
-	"namedInputs": {
-		"default": ["{projectRoot}/**/*", "sharedGlobals"],
-		"production": [
-			"default",
-			"!{projectRoot}/.eslintrc.json",
-			"!{projectRoot}/eslint.config.js",
-			"!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
-			"!{projectRoot}/tsconfig.spec.json",
-			"!{projectRoot}/jest.config.[jt]s",
-			"!{projectRoot}/src/test-setup.[jt]s",
-			"!{projectRoot}/test-setup.[jt]s",
-			"!{projectRoot}/cypress/**/*",
-			"!{projectRoot}/**/*.cy.[jt]s?(x)",
-			"!{projectRoot}/cypress.config.[jt]s"
-		],
-		"sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
-	},
-	"targetDefaults": {
-		"@nx/js:tsc": {
-			"cache": true,
-			"dependsOn": ["^build"],
-			"inputs": ["production", "^production"]
-		},
-		"@nx/eslint:lint": {
-			"cache": true,
-			"inputs": [
-				"default",
-				"{workspaceRoot}/.eslintrc.json",
-				"{workspaceRoot}/.eslintignore",
-				"{workspaceRoot}/eslint.config.js"
-			]
-		},
-		"@nx/jest:jest": {
-			"cache": true,
-			"inputs": [
-				"default",
-				"^production",
-				"{workspaceRoot}/jest.preset.js"
-			],
-			"options": {
-				"passWithNoTests": true
-			},
-			"configurations": {
-				"ci": {
-					"ci": true,
-					"codeCoverage": true
-				}
-			}
-		},
-		"@angular-devkit/build-angular:application": {
-			"cache": true,
-			"dependsOn": ["^build"],
-			"inputs": ["production", "^production"]
-		}
-	},
-	"plugins": [
-		{
-			"plugin": "@nx/eslint/plugin",
-			"options": {
-				"targetName": "eslint:lint"
-			}
-		}
-	],
-	"generators": {
-		"@nx/angular:application": {
-			"e2eTestRunner": "cypress",
-			"linter": "eslint",
-			"style": "scss",
-			"unitTestRunner": "jest"
-		}
-	},
-	"release": {
-		"projectsRelationship": "independent",
-		"releaseTagPattern": "{projectName}@{version}",
-		"changelog": {
-			"workspaceChangelog": false,
-			"projectChangelogs": true
-		},
-		"conventionalCommits": {
-			"types": {
-				"fix": {
-					"semverBump": "patch",
-					"changelog": {
-						"title": "Bug fixes"
-					}
-				},
-				"docs": {
-					"semverBump": "none",
-					"changelog": {
-						"title": "Documentation"
-					}
-				},
-				"perf": {
-					"semverBump": "patch",
-					"changelog": {
-						"title": "Performance Enhancements"
-					}
-				},
-				"chore": {
-					"semverBump": "none",
-					"changelog": false
-				},
-				"break": {
-					"semverBump": "major",
-					"changelog": {
-						"title": "Breaking Changes"
-					}
-				}
-			}
-		},
-		"version": {
-			"preVersionCommand": "npx nx buildVersion && npx nx run-many -t build",
-			"conventionalCommits": true,
-			"generatorOptions": {
-				"fallbackCurrentVersionResolver": "disk"
-			}
-		},
-		"projects": ["packages/*", "!packages/deprecated", "!packages/*-e2e"]
-	},
-	"nxCloudAccessToken": "Njk4NTc0ZTQtNjJhZS00NzUzLWI4ZjQtNThmMzdhNTdhYjZifHJlYWQtd3JpdGU="
+  "$schema": "./node_modules/nx/schemas/nx-schema.json",
+  "defaultBase": "master",
+  "namedInputs": {
+    "default": ["{projectRoot}/**/*", "sharedGlobals"],
+    "production": [
+      "default",
+      "!{projectRoot}/.eslintrc.json",
+      "!{projectRoot}/eslint.config.js",
+      "!{projectRoot}/**/?(*.)+(spec|test).[jt]s?(x)?(.snap)",
+      "!{projectRoot}/tsconfig.spec.json",
+      "!{projectRoot}/jest.config.[jt]s",
+      "!{projectRoot}/src/test-setup.[jt]s",
+      "!{projectRoot}/test-setup.[jt]s",
+      "!{projectRoot}/cypress/**/*",
+      "!{projectRoot}/**/*.cy.[jt]s?(x)",
+      "!{projectRoot}/cypress.config.[jt]s"
+    ],
+    "sharedGlobals": ["{workspaceRoot}/.github/workflows/ci.yml"]
+  },
+  "targetDefaults": {
+    "@nx/js:tsc": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    },
+    "@nx/eslint:lint": {
+      "cache": true,
+      "inputs": [
+        "default",
+        "{workspaceRoot}/.eslintrc.json",
+        "{workspaceRoot}/.eslintignore",
+        "{workspaceRoot}/eslint.config.js"
+      ]
+    },
+    "@nx/jest:jest": {
+      "cache": true,
+      "inputs": ["default", "^production", "{workspaceRoot}/jest.preset.js"],
+      "options": {
+        "passWithNoTests": true
+      },
+      "configurations": {
+        "ci": {
+          "ci": true,
+          "codeCoverage": true
+        }
+      }
+    },
+    "@angular-devkit/build-angular:application": {
+      "cache": true,
+      "dependsOn": ["^build"],
+      "inputs": ["production", "^production"]
+    }
+  },
+  "plugins": [
+    {
+      "plugin": "@nx/eslint/plugin",
+      "options": {
+        "targetName": "eslint:lint"
+      }
+    }
+  ],
+  "generators": {
+    "@nx/angular:application": {
+      "e2eTestRunner": "cypress",
+      "linter": "eslint",
+      "style": "scss",
+      "unitTestRunner": "jest"
+    }
+  },
+  "release": {
+    "projectsRelationship": "independent",
+    "releaseTagPattern": "{projectName}@{version}",
+    "changelog": {
+      "workspaceChangelog": false,
+      "projectChangelogs": true
+    },
+    "conventionalCommits": {
+      "types": {
+        "fix": {
+          "semverBump": "patch",
+          "changelog": {
+            "title": "Bug fixes"
+          }
+        },
+        "docs": {
+          "semverBump": "none",
+          "changelog": {
+            "title": "Documentation"
+          }
+        },
+        "perf": {
+          "semverBump": "patch",
+          "changelog": {
+            "title": "Performance Enhancements"
+          }
+        },
+        "chore": {
+          "semverBump": "none",
+          "changelog": false
+        },
+        "break": {
+          "semverBump": "major",
+          "changelog": {
+            "title": "Breaking Changes"
+          }
+        }
+      }
+    },
+    "version": {
+      "preVersionCommand": "npx nx buildVersion && npx nx run-many -t build",
+      "conventionalCommits": true,
+      "generatorOptions": {
+        "fallbackCurrentVersionResolver": "disk"
+      }
+    },
+    "projects": ["packages/*", "!packages/deprecated", "!packages/*-e2e"]
+  },
+  "nxCloudAccessToken": "Njk4NTc0ZTQtNjJhZS00NzUzLWI4ZjQtNThmMzdhNTdhYjZifHJlYWQtd3JpdGU="
 }
