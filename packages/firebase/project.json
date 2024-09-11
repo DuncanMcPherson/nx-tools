@@ -33,6 +33,11 @@
             "input": "./packages/firebase",
             "glob": "executors.json",
             "output": "."
+          },
+          {
+            "input": "./packages/firebase",
+            "glob": "migrations.json",
+            "output": "."
           }
         ]
       }
