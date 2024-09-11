@@ -1,3 +1,13 @@
+## 4.9.0 (2024-09-11)
+
+### 🚀 Features
+
+- added migration to assist with updating package versions
+
+### ❤️ Thank You
+
+- Duncan McPherson
+
 ## 4.8.0 (2024-09-11)
 
 ### 🚀 Features

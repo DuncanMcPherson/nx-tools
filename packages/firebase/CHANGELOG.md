@@ -1,3 +1,13 @@
+## 1.3.0 (2024-09-11)
+
+### 🚀 Features
+
+- added migration to assist with updating package versions
+
+### ❤️ Thank You
+
+- Duncan McPherson
+
 ## 1.2.0 (2024-09-11)
 
 ### 🚀 Features
