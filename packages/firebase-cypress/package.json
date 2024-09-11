@@ -1,6 +1,6 @@
 {
   "name": "@nxextensions/firebase-cypress",
-  "version": "0.0.0-e2e",
+  "version": "1.1.1",
   "private": false,
   "description": "An NX Plugin for Firebase Applications that would like to use emulators for E2E testing with Cypress",
   "repository": {
