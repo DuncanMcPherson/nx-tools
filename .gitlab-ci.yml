@@ -15,14 +15,14 @@ stages:
 include:
   - template: Security/SAST.gitlab-ci.yml
     rules:
-      - if: $CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH
+      - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
   - component: gitlab.com/components/gitlab-triage/gitlab-triage@main
     inputs:
-      api_token: $DEVELOPER_WRITE_API
+      api_token: '$DEVELOPER_WRITE_API'
       stage: triage
     rules:
       - if: $CI_PIPELINE_SOURCE == "schedule"
-
+  - template: Security/Dependency-Scanning.gitlab-ci.yml
 main:
   stage: build
   interruptible: true
@@ -33,7 +33,7 @@ main:
       files:
         - package-lock.json
     paths:
-      - .npm/
+      - '.npm/'
   script:
     - npm ci --cache .npm --prefer-offline
     - NX_HEAD=$CI_COMMIT_SHA
@@ -51,13 +51,33 @@ tests:
       files:
         - package-lock.json
     paths:
-      - .npm/
+      - '.npm/'
   script:
     - npm ci --cache .npm --prefer-offline
     - NX_HEAD=$CI_COMMIT_SHA
     - NX_BASE=${CI_MERGE_REQUEST_DIFF_BASE_SHA:-$CI_COMMIT_BEFORE_SHA}
     - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t test
     - npx nx affected --base=$NX_BASE --head=$NX_HEAD -t e2e-ci --parallel 1
+  artifacts:
+    reports:
+      junit: test-results/**/*.xml
+    paths:
+      - test-results/**/*.xml
+    when: always
+baseTests:
+  stage: test
+  interruptible: true
+  rules:
+    - if: '$CI_COMMIT_BRANCH == $CI_DEFAULT_BRANCH'
+  cache:
+    key:
+      files:
+        - package-lock.json
+    paths:
+      - '.npm/'
+  script:
+    - npm ci --cache .npm --prefer-offline
+    - npx nx run-many -t test
   artifacts:
     reports:
       junit: test-results/**/*.xml
