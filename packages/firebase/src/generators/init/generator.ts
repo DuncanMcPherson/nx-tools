@@ -76,9 +76,7 @@ async function generateConfigurationFiles(
 }
 
 function hasFirebaseJson(projectRoot: string, tree: Tree): boolean {
-  return tree.exists(
-    joinPathFragments(tree.root, projectRoot, 'firebase.json')
-  );
+  return tree.exists(joinPathFragments(projectRoot, 'firebase.json'));
 }
 
 export default initGenerator;
