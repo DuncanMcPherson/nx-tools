@@ -1,0 +1,28 @@
+﻿name: CD
+
+on:
+  push:
+    branches:
+      - master
+
+permissions:
+  actions: read
+  contents: read
+
+jobs:
+  build:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions/setup-node@v3
+        with:
+          node-version: 20
+          cache: 'npm'
+      - run: npx nx-cloud start-ci-run --distribute-on="3 linux-small-js" --stop-agents-after="build"
+        name: Start CI Run
+      - run: npm ci --legacy-peer-deps
+        name: Install Node Modules
+      - run: npx nx run-many -t build
+        name: Build Projects
