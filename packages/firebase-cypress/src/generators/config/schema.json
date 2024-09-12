@@ -1,0 +1,24 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "Config",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "projects": {
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "The project(s) that you would like to generate configuration for.",
+      "x-prompt": "Which project(s) would you like to generate E2E configuration for?"
+    }
+  },
+  "required": ["projects"]
+}
