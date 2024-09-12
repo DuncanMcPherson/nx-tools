@@ -9,6 +9,9 @@ permissions:
   actions: read
   contents: read
 
+env:
+  NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
+
 jobs:
   build:
     runs-on: ubuntu-latest
@@ -20,9 +23,45 @@ jobs:
         with:
           node-version: 20
           cache: 'npm'
+          registry-url: 'https://registry.npmjs.org'
       - run: npx nx-cloud start-ci-run --distribute-on="3 linux-small-js" --stop-agents-after="build"
         name: Start CI Run
       - run: npm ci --legacy-peer-deps
         name: Install Node Modules
       - run: npx nx run-many -t build
         name: Build Projects
+  publish:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          fetch-depth: 0
+      - uses: actions-ecosystem/action-get-merged-pull-request@v1
+        name: Get Last PR title
+        id: get-merged-pull-request
+        with:
+          github_token: ${{ secrets.GITHUB_TOKEN }}
+      - name: Run Nx Release
+        run: nx release -y
+      - name: Ensure correct version tags exist
+        run: nx release publish --tag latest
+      - name: Get most recent tag
+        uses: actions-ecosystem/action-get-latest-tag@v1
+        if: ${{ success() }}
+        id: get-latest-tag
+        with:
+          semver_only: true
+      - name: Push tag to Repo
+        uses: actions-ecosystem/action-push-tag@v1
+        if: ${{ steps.get-latest-tag.outputs.tag != null }}
+        with:
+          tag: ${{ steps.get-latest-tag.outputs.tag }}
+          message: '${{ steps.get-latest-tag.outputs.tag }}: PR #${{ steps.get-merged-pull-request.outputs.number }} ${{ steps.get-merged-pull-request.outputs.title }}'
+      - name: Create GitHub Release
+        uses: actions/create-release@v1
+        if: ${{ success() }}
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+        with:
+          tag_name: ${{ steps.get-latest-tag.outputs.tag }}
+          release_name: ${{ steps.get-latest-tag.outputs.tag }}
