@@ -1,0 +1,3 @@
+﻿{
+    "baseServeTarget": "<%= project %>:<%= target %>"
+}

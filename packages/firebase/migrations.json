@@ -1,0 +1,9 @@
+{
+  "generators": {
+    "add-nx-firebase-json": {
+      "version": "1.2.0",
+      "description": "Migration for v1.2.0",
+      "implementation": "./src/migrations/add-nx-firebase-json/add-nx-firebase-json"
+    }
+  }
+}
