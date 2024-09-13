@@ -1,3 +1,13 @@
+## 1.5.0 (2024-09-13)
+
+### 🚀 Features
+
+- added inferred target for deployment
+
+### ❤️ Thank You
+
+- Duncan McPherson
+
 ## 1.4.0 (2024-09-13)
 
 ### 🚀 Features
