@@ -1,11 +1,34 @@
-# firebase
+[![NPM License](https://img.shields.io/npm/l/%40nxextensions%2Ffirebase)]()
+[![NPM Version](https://img.shields.io/npm/v/%40nxextensions%2Ffirebase)]()
 
-This library was generated with [Nx](https://nx.dev).
+# Nx Firebase
 
-## Building
+A plugin for Nx that auto-detects Firebase in your project and starts the emulators with your app, or deploys
+your application when ready.
 
-Run `nx build firebase` to build the library.
+## Installation
 
-## Running unit tests
+`npm i @nxextensions/firebase --save-dev`
 
-Run `nx test firebase` to execute the unit tests via [Jest](https://jestjs.io).
+or run:
+
+`nx add @nxextensions/firebase`
+
+to automatically configure and install the plugin.
+
+## Configuration
+
+In `nx.json` add:
+
+```json
+{
+  "plugins": [
+    {
+      "plugin": "@nxextensions/firebase",
+      "options": {
+        "serveTargetName": "serve-firebase"
+      }
+    }
+  ]
+}
+```
