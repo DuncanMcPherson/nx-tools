@@ -20,6 +20,7 @@ import { getLockFileName } from 'nx/src/plugins/js/lock-file/lock-file';
 
 export interface PluginOptions {
   serveTargetName?: string;
+  deployTargetName?: string;
   includeHosting?: boolean;
   saveDataDirectory?: string;
 }
@@ -111,6 +112,7 @@ export async function createNodesInternal(
 function normalizePluginOptions(options: PluginOptions) {
   options ??= {};
   options.serveTargetName ??= 'serve-firebase';
+  options.deployTargetName ??= 'deploy';
   options.includeHosting ??= false;
   return options;
 }
@@ -122,12 +124,34 @@ async function buildFirebaseTargets(
   context: CreateNodesContext
 ): Promise<PluginTargets> {
   const firebaseConfig = readJsonFile(join(context.workspaceRoot, configFile));
+  const targets: Record<string, TargetConfiguration> = {};
 
-  if (!firebaseConfig?.emulators) {
+  if (!firebaseConfig) {
     return {};
   }
 
-  const targets: Record<string, TargetConfiguration> = {};
+  targets[options.deployTargetName] = {
+    executor: '@nxextensions/firebase:deploy',
+    options: {
+      cwd: projectRoot,
+    },
+    parallelism: false,
+    metadata: {
+      description: "Runs 'firebase deploy' on your application",
+      technologies: ['firebase'],
+      help: {
+        command: `${pmc.exec} firebase deploy`,
+        example: {
+          args: ['--only hosting'],
+        },
+      },
+    },
+  };
+
+  if (!firebaseConfig.emulators) {
+    return { targets };
+  }
+
   const onlyEmulators = getEmulatorsFromConfig(firebaseConfig);
   const baseServeTarget = await getBaseServeTarget(configFile, context);
   const fullTargetName = `${baseServeTarget.split(':')[0]}:${

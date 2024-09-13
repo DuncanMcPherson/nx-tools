@@ -41,6 +41,7 @@ async function addFirebasePlugin(
     createNodesV2,
     {
       serveTargetName: ['serve-firebase'],
+      deployTargetName: ['deploy'],
       includeHosting: [false],
     },
     updatePackageScripts
