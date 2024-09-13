@@ -1,3 +1,18 @@
+## 4.10.0 (2024-09-13)
+
+### 🚀 Features
+
+- added generator to generate config
+
+### Bug fixes
+
+- optimization of the generator
+
+### ❤️ Thank You
+
+- Duncan
+- Duncan McPherson
+
 ## 4.9.0 (2024-09-11)
 
 ### 🚀 Features
