@@ -1,3 +1,19 @@
+## 1.4.0 (2024-09-13)
+
+### 🚀 Features
+
+- added a deployment executor for firebase projects
+
+- added inferred target for deployment
+
+### Documentation
+
+- updated README.md to reflect actual usage and documentation
+
+### ❤️ Thank You
+
+- Duncan McPherson
+
 ## 1.3.0 (2024-09-11)
 
 ### 🚀 Features

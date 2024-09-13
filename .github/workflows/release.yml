@@ -6,8 +6,8 @@ on:
       - master
 
 permissions:
-  actions: read
-  contents: read
+  actions: write
+  contents: write
 
 env:
   NODE_AUTH_TOKEN: ${{ secrets.NPM_TOKEN }}
