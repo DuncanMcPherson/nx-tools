@@ -1,0 +1,61 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "$id": "Config",
+  "title": "",
+  "type": "object",
+  "properties": {
+    "projects": {
+      "alias": "p",
+      "oneOf": [
+        {
+          "type": "string"
+        },
+        {
+          "type": "array",
+          "items": {
+            "type": "string"
+          }
+        }
+      ],
+      "description": "The project(s) that you would like to generate configuration for.",
+      "x-prompt": "Which project(s) would you like to generate E2E configuration for?",
+      "x-priority": "important"
+    },
+    "useJavascript": {
+      "type": "boolean",
+      "default": false,
+      "description": "Whether to use Javascript or Typescript. The default value is \"false\"",
+      "alias": "j"
+    },
+    "directory": {
+      "type": "string",
+      "description": "The source root for this project",
+      "default": "src"
+    },
+    "bundler": {
+      "type": "string",
+      "description": "The bundler to use with your project",
+      "enum": ["vite", "webpack"],
+      "x-prompt": {
+        "message": "Which bundler would you like to use?",
+        "type": "list",
+        "items": [
+          {
+            "value": "vite",
+            "label": "Vite"
+          },
+          {
+            "value": "webpack",
+            "label": "Webpack"
+          }
+        ]
+      }
+    },
+    "baseUrl": {
+      "type": "string",
+      "description": "The baseUrl that your application is served at",
+      "default": "http://localhost:4200"
+    }
+  },
+  "required": ["projects"]
+}

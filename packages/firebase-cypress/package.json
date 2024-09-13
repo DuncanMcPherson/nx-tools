@@ -1,6 +1,6 @@
 {
   "name": "@nxextensions/firebase-cypress",
-  "version": "4.9.0",
+  "version": "4.8.1",
   "private": false,
   "description": "An NX Plugin for Firebase Applications that would like to use emulators for E2E testing with Cypress",
   "repository": {
@@ -30,7 +30,8 @@
     "vite": "^5.3.2",
     "nx": "^19.5.1",
     "@nx/js": "^19.5.1",
-    "shell-exec": "^1.1.2"
+    "shell-exec": "^1.1.2",
+    "chalk": "^4.1.2"
   },
   "peerDependencies": {
     "cypress": ">= 3"
