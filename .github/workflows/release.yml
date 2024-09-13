@@ -54,8 +54,8 @@ jobs:
           github_token: ${{ secrets.GITHUB_TOKEN }}
       - name: Run Nx Release
         run: npx nx release -y
-      - name: Ensure correct version tags exist
-        run: npx nx release publish --tag latest
+      #      - name: Ensure correct version tags exist
+      #        run: npx nx release publish --tag latest
       - name: Get most recent tag
         uses: actions-ecosystem/action-get-latest-tag@v1
         if: ${{ success() }}
