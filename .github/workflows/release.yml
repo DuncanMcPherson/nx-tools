@@ -43,6 +43,10 @@ jobs:
           registry-url: 'https://registry.npmjs.org'
       - name: Install needed packages
         run: npm ci --legacy-peer-deps
+      - name: Set Identity for Release
+        run: |
+          git config user.email "d.mcpherson.home@gmail.com"
+          git config user.name "Duncan"
       - uses: actions-ecosystem/action-get-merged-pull-request@v1
         name: Get Last PR title
         id: get-merged-pull-request

@@ -1,0 +1,14 @@
+{
+  "$schema": "https://json-schema.org/schema",
+  "version": 2,
+  "title": "Deploy executor",
+  "description": "",
+  "type": "object",
+  "properties": {
+    "cwd": {
+      "type": "string",
+      "description": "The directory of your firebase.json"
+    }
+  },
+  "required": []
+}

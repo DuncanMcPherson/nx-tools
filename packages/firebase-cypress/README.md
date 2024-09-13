@@ -40,4 +40,4 @@ In `nx.json` add:
 
 Firebase Cypress depends on the following package(s) to run properly:
 
-`@nxextensions/nx-firebase`
+`cypress`
