@@ -130,8 +130,11 @@ async function buildFirebaseTargets(
     return {};
   }
 
+  const baseServeTarget = await getBaseServeTarget(configFile, context);
+
   targets[options.deployTargetName] = {
     executor: '@nxextensions/firebase:deploy',
+    dependsOn: ['build'],
     options: {
       cwd: projectRoot,
     },
@@ -153,7 +156,6 @@ async function buildFirebaseTargets(
   }
 
   const onlyEmulators = getEmulatorsFromConfig(firebaseConfig);
-  const baseServeTarget = await getBaseServeTarget(configFile, context);
   const fullTargetName = `${baseServeTarget.split(':')[0]}:${
     options.serveTargetName
   }`;
